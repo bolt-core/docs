@@ -1,0 +1,94 @@
+---
+title: "Batch verification jobs"
+description: "List email jobs for a batch verification task."
+---
+
+## Overview
+
+- Source: `services/go/app/cmd/controllers/task_controller.go`
+- Base path: `/api/v1`
+- Access: user-scoped. Non-admin requests are restricted to their own user_id.
+- Admins can query across users using `user_id` where allowed.
+- `user_id` is never accepted in request bodies.
+
+
+## GET /api/v1/tasks/{id}/jobs
+
+Purpose: get a paginated list of email jobs for a specific batch verification task, including nested verification results (when available).
+
+Access: Non-admins can only access their own batch verification tasks.
+
+Path parameter:
+
+- `id` (UUID, required)
+
+Query parameters:
+
+- `limit` (int, default 10, max 100)
+- `offset` (int, default 0)
+
+Notes:
+
+- Each job includes `email` data when the job is associated with an `emails` record (i.e. when `email_id` is set). Otherwise `email` is omitted.
+- Results are ordered by `created_at DESC`.
+
+Example request:
+
+```bash
+curl -X GET \
+  'https://api.example.com/api/v1/tasks/550e8400-e29b-41d4-a716-446655440000/jobs?limit=10&offset=0'
+```
+
+### Response
+
+Status: `200 OK`
+
+Example response:
+
+```json
+{
+  "jobs": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "task_id": "550e8400-e29b-41d4-a716-446655440000",
+      "email_address": "user1@example.com",
+      "status": "completed",
+      "email": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "email": "user1@example.com",
+        "status": "exists",
+        "is_role_based": false,
+        "is_disposable": false,
+        "has_mx_records": true,
+        "has_reverse_dns": true,
+        "domain_name": "example.com",
+        "host_name": "mx.example.com",
+        "server_type": "Unknown",
+        "is_catchall": false,
+        "validated_at": "2025-01-01T12:04:59Z",
+        "unknown_reason": null,
+        "needs_physical_verify": false
+      },
+      "created_at": "2025-01-01T12:00:01Z",
+      "updated_at": "2025-01-01T12:05:00Z"
+    }
+  ],
+  "count": 1,
+  "limit": 10,
+  "offset": 0
+}
+```
+
+Email fields:
+
+- `id`, `email`, `status`, `is_role_based`.
+- `is_disposable`, `has_mx_records`, `has_reverse_dns`.
+- `domain_name`, `host_name`, `server_type`, `is_catchall`.
+- `validated_at`, `unknown_reason`, `needs_physical_verify`.
+
+Errors:
+
+- `400` invalid ID or pagination parameters.
+- `401` unauthorized.
+- `404` batch verification task not found.
+- `500` internal error.

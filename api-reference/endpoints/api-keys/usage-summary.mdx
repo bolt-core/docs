@@ -1,0 +1,66 @@
+---
+title: "API key usage summary"
+description: "Usage metrics for API keys."
+---
+
+## Overview
+- Source: `services/go/app/cmd/controllers/api_key_controller.go`
+- Base path: `/api/v1`
+- Access: user-scoped; admins can act on behalf of another user via `user_id` (required when the admin token does not map to a user UUID).
+
+
+## GET /api/v1/api-keys/usage
+Purpose: return API key usage metrics for a user.
+
+Query parameters:
+- `user_id` (UUID, admin only)
+- `from` (RFC3339, optional)
+- `to` (RFC3339, optional)
+
+Notes:
+- Series data is only included when both `from` and `to` are provided.
+
+Example request:
+```bash
+curl -X GET \
+  'https://api.example.com/api/v1/api-keys/usage?from=2025-01-01T00:00:00Z&to=2025-01-07T00:00:00Z'
+```
+
+### Response
+Status: `200 OK`
+
+Example response:
+```json
+{
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "total_api_keys": 3,
+  "api_keys_by_purpose": {
+    "zapier": 1,
+    "n8n": 1,
+    "google_sheets": 0,
+    "custom": 1
+  },
+  "total_requests": 1234,
+  "requests_by_purpose": {
+    "zapier": 900,
+    "n8n": 200,
+    "google_sheets": 0,
+    "custom": 134
+  },
+  "last_used_at": "2025-01-07T12:00:00Z",
+  "series": [
+    {
+      "date": "2025-01-01",
+      "total_api_keys": 3,
+      "api_keys_by_purpose": { "zapier": 1, "n8n": 1, "google_sheets": 0, "custom": 1 },
+      "total_requests": 200,
+      "requests_by_purpose": { "zapier": 140, "n8n": 30, "google_sheets": 0, "custom": 30 }
+    }
+  ]
+}
+```
+
+Errors:
+- `400` invalid `user_id` or date params, or missing `user_id` for admin requests without an authenticated user.
+- `401` unauthorized.
+- `500` internal error.

@@ -1,0 +1,104 @@
+---
+title: "Retrieve user balance"
+description: "Retrieve the current user credit balance."
+---
+
+## Base URL
+- **Production:** `https://api.example.com`
+- **Staging:** `https://staging-api.example.com`
+- **Local:** `http://localhost:8080`
+
+
+## Conventions
+- **Content-Type:** `application/json`
+- **Date/Time:** ISO 8601 (UTC)
+- **Pagination:** `limit`, `offset`
+- **Error format:** See "Error Responses (Global)" in `docs/api/endpoint-template.md`
+
+---
+
+# Endpoints
+
+
+## GET /api/v1/credits/balance
+**Summary:** Return the current credit balance for the authenticated user.
+
+**Idempotent:** Yes
+**Tags:** credits
+
+### Request
+**Headers**
+- `Content-Type: application/json`
+
+**Query Params**
+| Name | Type | Required | Default | Description | Example |
+|------|------|----------|---------|-------------|---------|
+| user_id | string (uuid) | No | - | Target user ID (admins only) | `550e8400-e29b-41d4-a716-446655440000` |
+
+### Responses
+
+**200 OK - Credit balance**
+```json
+{
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "balance": 500
+}
+```
+
+**Response Fields**
+| Field | Type | Description |
+|------|------|-------------|
+| user_id | string | User UUID |
+| balance | integer | Current credit balance |
+
+**400 Bad Request - Invalid query parameters**
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "user_id must be a valid UUID"
+  }
+}
+```
+
+**401 Unauthorized**
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Missing or invalid token"
+  }
+}
+```
+
+**404 Not Found**
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "User not found"
+  }
+}
+```
+
+**500 Internal Server Error**
+```json
+{
+  "error": {
+    "code": "INTERNAL_ERROR",
+    "message": "Unexpected server error"
+  }
+}
+```
+
+### Notes
+- Admin tokens that do not map to a user UUID must supply `user_id`.
+
+### Examples
+**cURL**
+```bash
+curl -X GET \
+  'https://api.example.com/api/v1/credits/balance'
+```
+
+---

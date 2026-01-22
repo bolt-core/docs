@@ -1,0 +1,117 @@
+---
+title: "List batch verification tasks"
+description: "List batch verification tasks with optional filters."
+---
+
+## Overview
+
+- Source: `services/go/app/cmd/controllers/task_controller.go`
+- Base path: `/api/v1`
+- Access: user-scoped. Non-admin requests are restricted to their own user_id.
+- Admins can query across users using `user_id` where allowed.
+- `user_id` is never accepted in request bodies.
+
+
+## GET /api/v1/tasks
+
+Purpose: list batch verification tasks with optional filters, including file-backed status.
+
+### Request
+
+Query parameters:
+
+- `limit` (int, default 10, max 100)
+- `offset` (int, default 0)
+- `user_id` (UUID, admin only)
+- `is_file_backed` (bool, optional, `true` or `false`)
+- `created_after` (RFC3339 timestamp)
+- `created_before` (RFC3339 timestamp)
+
+Example request:
+
+```bash
+curl -X GET \
+  'https://api.example.com/api/v1/tasks?limit=10&offset=0&is_file_backed=true'
+```
+
+### Response
+
+Status: `200 OK`
+
+Example response:
+
+```json
+{
+  "tasks": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "user_id": "550e8400-e29b-41d4-a716-446655440000",
+      "webhook_url": "https://example.com/webhook",
+      "is_file_backed": true,
+      "file": {
+        "upload_id": "550e8400-e29b-41d4-a716-446655440111",
+        "task_id": "550e8400-e29b-41d4-a716-446655440000",
+        "filename": "emails.csv",
+        "email_count": 123,
+        "status": "completed",
+        "created_at": "2025-01-01T12:00:00Z",
+        "updated_at": "2025-01-01T12:05:00Z"
+      },
+      "source": "frontend",
+      "created_at": "2025-01-01T12:00:00Z",
+      "updated_at": "2025-01-01T12:05:00Z",
+      "metrics": {
+        "total_email_addresses": 2,
+        "job_status": {
+          "pending": 0,
+          "processing": 0,
+          "completed": 2,
+          "failed": 0
+        },
+        "progress": 1,
+        "progress_percent": 100,
+        "verification_status": {
+          "exists": 2,
+          "not_exists": 0,
+          "catchall": 0,
+          "invalid_syntax": 0,
+          "unknown": 0,
+          "role_based": 0,
+          "disposable_domain_emails": 0
+        },
+        "last_verification_requested_at": "2025-01-01T12:00:01Z",
+        "last_verification_completed_at": "2025-01-01T12:04:59Z"
+      }
+    }
+  ],
+  "count": 1,
+  "limit": 10,
+  "offset": 0
+}
+```
+
+Response fields:
+
+- `tasks`: array of batch verification summaries (see fields below).
+- `source`: optional overall batch verification source when all tasks share the same origin (`frontend` or `api_key`).
+- `count`, `limit`, `offset`: pagination metadata.
+
+Batch verification summary fields:
+
+- `id`, `user_id`, `webhook_url`, `source`, `created_at`, `updated_at`.
+- `is_file_backed`: indicates whether the batch verification task originated from a file upload.
+- `file`: file upload metadata (present only when `is_file_backed` is true, otherwise omitted or null).
+- `file.upload_id`: UUID of the file upload.
+- `file.task_id`: UUID of the associated batch verification task.
+- `file.filename`: original filename of the uploaded file.
+- `file.email_count`: number of emails in the uploaded file.
+- `file.status`: upload processing status (`processing`, `completed`, `failed`).
+- `file.created_at`, `file.updated_at`: upload timestamps.
+- `metrics`: aggregated batch verification metrics (see [Batch verification metrics fields](/api-reference/endpoints/batch-verification/metrics-fields)).
+
+Errors:
+
+- `400` invalid query parameters.
+- `401` unauthorized.
+- `429` rate limited.
+- `500` internal error.

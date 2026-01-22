@@ -73,19 +73,55 @@
           {
             "group": "Authorization",
             "pages": [
-              "api-reference/authorization"
+              "api-reference/authorization",
+              {
+                "group": "API keys",
+                "pages": [
+                  "api-reference/endpoints/api-keys/create-key",
+                  "api-reference/endpoints/api-keys/list-keys",
+                  "api-reference/endpoints/api-keys/get-key-usage",
+                  "api-reference/endpoints/api-keys/revoke-key",
+                  "api-reference/endpoints/api-keys/usage-summary"
+                ]
+              }
             ]
           },
           {
             "group": "Email Verification API",
             "pages": [
               "api-reference/endpoints/realtime-verification",
-              "api-reference/endpoints/streaming-controller",
-              "api-reference/endpoints/task-controller",
-              "api-reference/endpoints/batch-file-controller",
-              "api-reference/endpoints/api-key-controller",
-              "api-reference/endpoints/credit-transaction-controller",
+              {
+                "group": "Batch verification",
+                "pages": [
+                  "api-reference/endpoints/batch-verification/create-task",
+                  "api-reference/endpoints/batch-verification/list-tasks",
+                  "api-reference/endpoints/batch-verification/get-task",
+                  "api-reference/endpoints/batch-verification/task-series",
+                  "api-reference/endpoints/batch-verification/task-jobs",
+                  "api-reference/endpoints/batch-verification/download-results",
+                  "api-reference/endpoints/batch-verification/metrics-fields"
+                ]
+              },
+              {
+                "group": "File Upload",
+                "pages": [
+                  "api-reference/endpoints/file-upload/upload-file",
+                  "api-reference/endpoints/file-upload/get-upload-status"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Reporting",
+            "pages": [
               "api-reference/endpoints/metrics-controller"
+            ]
+          },
+          {
+            "group": "Credit",
+            "pages": [
+              "api-reference/endpoints/credit/balance",
+              "api-reference/endpoints/credit/transactions"
             ]
           },
           {
@@ -109,13 +145,13 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:support@boltroute.ai"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://dashboard.boltroute.ai"
     }
   },
   "contextual": {
@@ -132,9 +168,9 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/boltroute",
+      "github": "https://github.com/boltroute",
+      "linkedin": "https://linkedin.com/company/boltroute"
     }
   }
 }

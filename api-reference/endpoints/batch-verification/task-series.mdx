@@ -1,0 +1,89 @@
+---
+title: "Batch verification series"
+description: "Daily metrics series for a batch verification task."
+---
+
+## Overview
+
+- Source: `services/go/app/cmd/controllers/task_controller.go`
+- Base path: `/api/v1`
+- Access: user-scoped. Non-admin requests are restricted to their own user_id.
+- Admins can query across users using `user_id` where allowed.
+- `user_id` is never accepted in request bodies.
+
+
+## GET /api/v1/tasks/{id}/series
+
+Purpose: daily metrics series for a batch verification task between `from` and `to` dates (max 90 days).
+
+Access: Non-admins can only access their own batch verification tasks.
+
+Query parameters:
+
+- `from` (RFC3339, optional)
+- `to` (RFC3339, optional)
+
+Rules:
+
+- If both `from` and `to` are omitted, last 7 days are returned.
+- If either is provided, both must be provided.
+- Max range is 90 days.
+
+Example request:
+
+```bash
+curl -X GET \
+  'https://api.example.com/api/v1/tasks/550e8400-e29b-41d4-a716-446655440000/series?from=2025-01-01T00:00:00Z&to=2025-01-07T00:00:00Z'
+```
+
+### Response
+
+Status: `200 OK`
+
+Example response:
+
+```json
+{
+  "task_id": "550e8400-e29b-41d4-a716-446655440000",
+  "source": "frontend",
+  "series": [
+    {
+      "date": "2025-01-01",
+      "total_email_addresses": 2,
+      "job_status": {
+        "pending": 0,
+        "processing": 0,
+        "completed": 2,
+        "failed": 0
+      },
+      "progress": 1,
+      "progress_percent": 100,
+      "verification_status": {
+        "exists": 2,
+        "not_exists": 0,
+        "catchall": 0,
+        "invalid_syntax": 0,
+        "unknown": 0,
+        "role_based": 0,
+        "disposable_domain_emails": 0
+      },
+      "last_verification_requested_at": "2025-01-01T12:00:01Z",
+      "last_verification_completed_at": "2025-01-01T12:04:59Z"
+    }
+  ]
+}
+```
+
+Response fields:
+
+- `task_id`: batch verification task UUID.
+- `source`: batch verification origin (`frontend` or `api_key`).
+- `series`: list of daily metrics points.
+
+Errors:
+
+- `400` invalid ID or date parameters.
+- `401` unauthorized.
+- `403` forbidden.
+- `404` batch verification task not found.
+- `500` internal error.

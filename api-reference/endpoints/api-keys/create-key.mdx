@@ -1,0 +1,54 @@
+---
+title: "Create API key"
+description: "Create a new API key."
+---
+
+## Overview
+- Source: `services/go/app/cmd/controllers/api_key_controller.go`
+- Base path: `/api/v1`
+- Access: user-scoped; admins can act on behalf of another user via `user_id` (required when the admin token does not map to a user UUID).
+
+
+## POST /api/v1/api-keys
+Purpose: create a new API key. The plaintext key is returned only once.
+
+Query parameters (admin only):
+- `user_id` (UUID): target user ID when admin token does not map to a user UUID.
+
+Body:
+```json
+{ "name": "My Production Key", "purpose": "zapier" }
+```
+
+Allowed `purpose` values: `zapier`, `n8n`, `google sheets`, `custom`.
+
+Example request:
+```bash
+curl -X POST \
+  'https://api.example.com/api/v1/api-keys' \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"My Production Key","purpose":"zapier"}'
+```
+
+### Response
+Status: `201 Created`
+
+Example response:
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "key": "sk_live_abcdef...",
+  "name": "My Production Key",
+  "purpose": "zapier",
+  "created_at": "2025-01-01T12:00:00Z"
+}
+```
+
+Response fields:
+- `key`: plaintext key (store securely; it will not be returned again).
+
+Errors:
+- `400` invalid request or missing `user_id` for admin tokens without user mapping.
+- `401` unauthorized.
+- `500` internal error.

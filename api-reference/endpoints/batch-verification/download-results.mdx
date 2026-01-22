@@ -1,0 +1,46 @@
+---
+title: "Download batch verification results"
+description: "Download batch verification results as a file."
+---
+
+## Overview
+
+- Source: `services/go/app/cmd/controllers/task_controller.go`
+- Base path: `/api/v1`
+- Access: user-scoped. Non-admin requests are restricted to their own user_id.
+- Admins can query across users using `user_id` where allowed.
+- `user_id` is never accepted in request bodies.
+
+
+## GET /api/v1/tasks/{id}/download
+
+Purpose: download batch verification results as a file.
+
+Access: Non-admins can only access their own batch verification tasks.
+
+Query parameters:
+
+- `task_id` (UUID, optional): overrides the batch verification task ID from the path.
+- `format` (string, optional): `csv`, `txt`, or `xlsx` (default `csv`).
+
+Example request:
+
+```bash
+curl -L \
+  'https://api.example.com/api/v1/tasks/550e8400-e29b-41d4-a716-446655440000/download?format=csv' \
+  -o batch-verification-results.csv
+```
+
+### Response
+
+Status: `200 OK`
+
+- Response body is a file download.
+
+Errors:
+
+- `400` invalid ID or format.
+- `401` unauthorized.
+- `403` forbidden.
+- `404` batch verification task not found.
+- `500` internal error.

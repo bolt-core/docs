@@ -1,0 +1,90 @@
+---
+title: "Get batch verification task"
+description: "Retrieve a batch verification task with aggregated metrics."
+---
+
+## Overview
+
+- Source: `services/go/app/cmd/controllers/task_controller.go`
+- Base path: `/api/v1`
+- Access: user-scoped. Non-admin requests are restricted to their own user_id.
+- Admins can query across users using `user_id` where allowed.
+- `user_id` is never accepted in request bodies.
+
+
+## GET /api/v1/tasks/{id}
+
+Purpose: retrieve a single batch verification task with aggregated metrics.
+
+Access: Non-admins can only access their own batch verification tasks.
+
+Path parameter:
+
+- `id` (UUID, required)
+
+Example request:
+
+```bash
+curl -X GET \
+  'https://api.example.com/api/v1/tasks/550e8400-e29b-41d4-a716-446655440000'
+```
+
+### Response
+
+Status: `200 OK`
+
+Example response:
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "webhook_url": "https://example.com/webhook",
+  "is_file_backed": true,
+  "file": {
+    "upload_id": "550e8400-e29b-41d4-a716-446655440111",
+    "task_id": "550e8400-e29b-41d4-a716-446655440000",
+    "filename": "emails.csv",
+    "email_count": 123,
+    "status": "completed",
+    "created_at": "2025-01-01T12:00:00Z",
+    "updated_at": "2025-01-01T12:05:00Z"
+  },
+  "source": "frontend",
+  "created_at": "2025-01-01T12:00:00Z",
+  "updated_at": "2025-01-01T12:05:00Z",
+  "started_at": null,
+  "finished_at": null,
+  "metrics": {
+    "total_email_addresses": 2,
+    "job_status": {
+      "pending": 0,
+      "processing": 0,
+      "completed": 2,
+      "failed": 0
+    },
+    "progress": 1,
+    "progress_percent": 100,
+    "verification_status": {
+      "exists": 2,
+      "not_exists": 0,
+      "catchall": 0,
+      "invalid_syntax": 0,
+      "unknown": 0,
+      "role_based": 0,
+      "disposable_domain_emails": 0
+    },
+    "last_verification_requested_at": "2025-01-01T12:00:01Z",
+    "last_verification_completed_at": "2025-01-01T12:04:59Z"
+  }
+}
+```
+
+Errors:
+
+- `400` invalid ID.
+- `401` unauthorized.
+- `403` forbidden (non-admin accessing another user).
+- `404` batch verification task not found.
+- `429` rate limited.
+- `500` internal error.

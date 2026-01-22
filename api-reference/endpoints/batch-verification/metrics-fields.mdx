@@ -1,0 +1,19 @@
+---
+title: "Batch verification metrics fields"
+description: "Field definitions for batch verification metrics."
+---
+
+## Overview
+- Source: `services/go/app/cmd/controllers/task_controller.go`
+- Base path: `/api/v1`
+
+## Batch verification metrics fields
+
+- `total_email_addresses`: total emails in the batch verification task.
+- `job_status`: counts per job status (`pending`, `processing`, `completed`, `failed`).
+- `progress`: float ratio of completed/failed over total.
+- `progress_percent`: integer percent (0-100).
+- `verification_status`: counts by result (`exists`, `not_exists`, `catchall`, `invalid_syntax`, `unknown`) plus `role_based` and `disposable_domain_emails`.
+- `last_verification_requested_at`: last time a verification was requested.
+- `last_verification_completed_at`: last time a verification completed.
+
