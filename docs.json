@@ -73,19 +73,13 @@
           {
             "group": "Email Verification API",
             "pages": [
-              "api-reference/endpoints/routes",
-              "api-reference/endpoints/email-controller",
+              "api-reference/endpoints/realtime-verification",
               "api-reference/endpoints/streaming-controller",
               "api-reference/endpoints/task-controller",
               "api-reference/endpoints/batch-file-controller",
               "api-reference/endpoints/api-key-controller",
               "api-reference/endpoints/credit-transaction-controller",
-              "api-reference/endpoints/metrics-controller",
-              "api-reference/endpoints/domain-controller",
-              "api-reference/endpoints/disposable-domain-controller",
-              "api-reference/endpoints/role-pattern-controller",
-              "api-reference/endpoints/proxy-controller",
-              "api-reference/endpoints/external-controller"
+              "api-reference/endpoints/metrics-controller"
             ]
           },
           {
