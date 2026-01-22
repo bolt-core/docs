@@ -38,6 +38,43 @@ curl -X POST \
   -d '{"email":"user@example.com"}'
 ```
 
+## Try authorization
+
+<CardGroup cols={2}>
+  <Card
+    title="Realtime verification"
+    icon="bolt"
+    href="/api-reference/endpoints/realtime-verification"
+    cta="Try endpoint"
+  >
+    Verify a single email in real time.
+  </Card>
+  <Card
+    title="Batch verification"
+    icon="list-check"
+    href="/api-reference/endpoints/batch-verification/create-task"
+    cta="Create task"
+  >
+    Submit a batch verification job.
+  </Card>
+  <Card
+    title="File upload"
+    icon="file-arrow-up"
+    href="/api-reference/endpoints/file-upload/upload-file"
+    cta="Upload file"
+  >
+    Upload a CSV/XLSX for batch verification.
+  </Card>
+  <Card
+    title="API keys"
+    icon="key"
+    href="/api-reference/endpoints/api-keys/create-key"
+    cta="Create key"
+  >
+    Generate a new API key.
+  </Card>
+</CardGroup>
+
 <Note>
   All endpoints in this reference require authorization unless explicitly stated. Endpoint examples omit authorization headers for brevity.
 </Note>
