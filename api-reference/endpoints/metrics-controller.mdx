@@ -6,13 +6,10 @@ description: "Reference documentation for Metrics endpoints."
 ## Overview
 - Source: `services/go/app/cmd/controllers/metrics_controller.go`
 - Base path: `/api/v1`
-- Auth: API key (ApiKeyAuth)
 - Access: user-scoped; admins can query other users via `user_id`.
 
 ## GET /api/v1/metrics/verifications
 Purpose: return verification metrics for a user.
-
-Auth: required.
 
 Query parameters:
 - `user_id` (UUID, admin only)
@@ -25,8 +22,7 @@ Notes:
 Example request:
 ```bash
 curl -X GET \
-  'https://api.example.com/api/v1/metrics/verifications?from=2025-01-01T00:00:00Z&to=2025-01-07T00:00:00Z' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+  'https://api.example.com/api/v1/metrics/verifications?from=2025-01-01T00:00:00Z&to=2025-01-07T00:00:00Z'
 ```
 
 ### Response

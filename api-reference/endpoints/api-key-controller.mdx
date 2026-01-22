@@ -6,13 +6,10 @@ description: "Reference documentation for API key endpoints."
 ## Overview
 - Source: `services/go/app/cmd/controllers/api_key_controller.go`
 - Base path: `/api/v1`
-- Auth: Composite (API key or Supabase JWT)
 - Access: user-scoped; admins can act on behalf of another user via `user_id` (required when the admin token does not map to a user UUID).
 
 ## POST /api/v1/api-keys
 Purpose: create a new API key. The plaintext key is returned only once.
-
-Auth: required.
 
 Query parameters (admin only):
 - `user_id` (UUID): target user ID when admin token does not map to a user UUID.
@@ -28,7 +25,6 @@ Example request:
 ```bash
 curl -X POST \
   'https://api.example.com/api/v1/api-keys' \
-  -H 'Authorization: Bearer <api_key_or_jwt>' \
   -H 'Content-Type: application/json' \
   -d '{"name":"My Production Key","purpose":"zapier"}'
 ```
@@ -59,8 +55,6 @@ Errors:
 ## GET /api/v1/api-keys
 Purpose: list active API keys for the authenticated user.
 
-Auth: required.
-
 Query parameters:
 - `user_id` (UUID, admin only; required when the admin token does not map to a user UUID)
 - `from` (RFC3339 timestamp, optional): filter by `last_used_at` >= from
@@ -69,8 +63,7 @@ Query parameters:
 Example request:
 ```bash
 curl -X GET \
-  'https://api.example.com/api/v1/api-keys' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+  'https://api.example.com/api/v1/api-keys'
 ```
 
 ### Response
@@ -102,8 +95,6 @@ Errors:
 ## GET /api/v1/api-keys/{id}/usage
 Purpose: return usage data for a single API key.
 
-Auth: required.
-
 Path parameter:
 - `id` (UUID)
 
@@ -119,8 +110,7 @@ Notes:
 Example request:
 ```bash
 curl -X GET \
-  'https://api.example.com/api/v1/api-keys/550e8400-e29b-41d4-a716-446655440000/usage?from=2025-01-01T00:00:00Z&to=2025-01-07T00:00:00Z' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+  'https://api.example.com/api/v1/api-keys/550e8400-e29b-41d4-a716-446655440000/usage?from=2025-01-01T00:00:00Z&to=2025-01-07T00:00:00Z'
 ```
 
 ### Response
@@ -154,16 +144,13 @@ Errors:
 ## DELETE /api/v1/api-keys/{id}
 Purpose: revoke an API key. Admins can revoke any key; non-admins can only revoke their own keys.
 
-Auth: required.
-
 Path parameter:
 - `id` (UUID)
 
 Example request:
 ```bash
 curl -X DELETE \
-  'https://api.example.com/api/v1/api-keys/550e8400-e29b-41d4-a716-446655440000' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+  'https://api.example.com/api/v1/api-keys/550e8400-e29b-41d4-a716-446655440000'
 ```
 
 ### Response
@@ -184,8 +171,6 @@ Errors:
 ## GET /api/v1/api-keys/usage
 Purpose: return API key usage metrics for a user.
 
-Auth: required.
-
 Query parameters:
 - `user_id` (UUID, admin only)
 - `from` (RFC3339, optional)
@@ -197,8 +182,7 @@ Notes:
 Example request:
 ```bash
 curl -X GET \
-  'https://api.example.com/api/v1/api-keys/usage?from=2025-01-01T00:00:00Z&to=2025-01-07T00:00:00Z' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+  'https://api.example.com/api/v1/api-keys/usage?from=2025-01-01T00:00:00Z&to=2025-01-07T00:00:00Z'
 ```
 
 ### Response

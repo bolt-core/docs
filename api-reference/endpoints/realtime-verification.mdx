@@ -6,17 +6,13 @@ description: "Reference documentation for realtime verification."
 ## Overview
 - Source: `services/go/app/cmd/controllers/email_controller.go`
 - Base path: `/api/v1`
-- Auth: Composite (API key or Supabase JWT)
 - Access: user-scoped.
 
 ## POST /api/v1/verify
 Purpose: perform realtime verification of a single email address (syntax, domain, SMTP, inbox checks).
 
-Auth: required (API key or Supabase JWT).
-
 ### Request
 Headers:
-- `Authorization: Bearer <api_key_or_jwt>` or `X-API-Key: <api_key>`
 - `Content-Type: application/json`
 
 Body:
@@ -26,7 +22,6 @@ Example request:
 ```bash
 curl -X POST \
   'https://api.example.com/api/v1/verify' \
-  -H 'Authorization: Bearer <api_key_or_jwt>' \
   -H 'Content-Type: application/json' \
   -d '{"email":"user@example.com"}'
 ```

@@ -6,14 +6,11 @@ description: "Reference documentation for Streaming endpoints."
 ## Overview
 - Source: `services/go/app/cmd/controllers/streaming_controller.go`
 - Base path: `/api/v1`
-- Auth: Composite (API key or Supabase JWT) via middleware/routes
 - Availability: endpoints are registered only when `Server.StreamingEnabled` is true.
 - Timeout: `Server.StreamingTimeout` (defaults to 30s when unset)
 
 ## GET /api/v1/verify/stream (WebSocket)
 Purpose: stream real-time verification progress over WebSocket.
-
-Auth: required (API key or Supabase JWT).
 
 ### Request
 Upgrade to WebSocket, then send a single JSON message within 5 seconds:
@@ -23,8 +20,7 @@ Upgrade to WebSocket, then send a single JSON message within 5 seconds:
 
 Example (wscat):
 ```bash
-wscat -c 'wss://api.example.com/api/v1/verify/stream' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+wscat -c 'wss://api.example.com/api/v1/verify/stream'
 # Then send:
 # {"email":"user@example.com"}
 ```
@@ -61,8 +57,6 @@ Errors:
 ## GET /api/v1/verify/stream/sse
 Purpose: stream real-time verification progress using Server-Sent Events (SSE).
 
-Auth: required (API key or Supabase JWT).
-
 ### Request
 Query parameters:
 - `email` (string, required)
@@ -70,7 +64,6 @@ Query parameters:
 Example request:
 ```bash
 curl -N \
-  -H 'Authorization: Bearer <api_key_or_jwt>' \
   'https://api.example.com/api/v1/verify/stream/sse?email=user@example.com'
 ```
 

@@ -1,0 +1,34 @@
+---
+title: "Authorization"
+description: "Authorize requests with your API key."
+---
+
+## API key usage
+
+Use your API key to authorize every request. Keep it secret and send it using one of the headers below.
+
+### Authorization header (recommended)
+
+```text
+Authorization: Bearer <api_key>
+```
+
+### X-API-Key header
+
+```text
+X-API-Key: <api_key>
+```
+
+## Example
+
+```bash
+curl -X POST \
+  'https://api.example.com/api/v1/verify' \
+  -H 'Authorization: Bearer <api_key>' \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"user@example.com"}'
+```
+
+<Note>
+  All endpoints in this reference require authorization unless explicitly stated. Endpoint examples omit authorization headers for brevity.
+</Note>

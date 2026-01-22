@@ -8,10 +8,6 @@ description: "Reference documentation for Credit management endpoints."
 - **Staging:** `https://staging-api.example.com`
 - **Local:** `http://localhost:8080`
 
-## Auth
-- **Type:** Bearer token (API key or Supabase JWT)
-- **Header:** `Authorization: Bearer <token>`
-
 ## Conventions
 - **Content-Type:** `application/json`
 - **Date/Time:** ISO 8601 (UTC)
@@ -25,13 +21,11 @@ description: "Reference documentation for Credit management endpoints."
 ## GET /api/v1/credits/balance
 **Summary:** Return the current credit balance for the authenticated user.
 
-**Auth Required:** Yes
 **Idempotent:** Yes
 **Tags:** credits
 
 ### Request
 **Headers**
-- `Authorization: Bearer <token>`
 - `Content-Type: application/json`
 
 **Query Params**
@@ -102,8 +96,7 @@ description: "Reference documentation for Credit management endpoints."
 **cURL**
 ```bash
 curl -X GET \
-  'https://api.example.com/api/v1/credits/balance' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+  'https://api.example.com/api/v1/credits/balance'
 ```
 
 ---
@@ -111,13 +104,11 @@ curl -X GET \
 ## GET /api/v1/credits/transactions
 **Summary:** List credit transactions for the authenticated user.
 
-**Auth Required:** Yes
 **Idempotent:** Yes
 **Tags:** credits
 
 ### Request
 **Headers**
-- `Authorization: Bearer <token>`
 - `Content-Type: application/json`
 
 **Query Params**
@@ -213,6 +204,5 @@ curl -X GET \
 **cURL**
 ```bash
 curl -X GET \
-  'https://api.example.com/api/v1/credits/transactions?limit=50&offset=0' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+  'https://api.example.com/api/v1/credits/transactions?limit=50&offset=0'
 ```

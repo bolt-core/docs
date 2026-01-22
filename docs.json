@@ -71,6 +71,12 @@
             ]
           },
           {
+            "group": "Authorization",
+            "pages": [
+              "api-reference/authorization"
+            ]
+          },
+          {
             "group": "Email Verification API",
             "pages": [
               "api-reference/endpoints/realtime-verification",

@@ -6,17 +6,13 @@ description: "Reference documentation for Batch file endpoints."
 ## Overview
 - Source: `services/go/app/cmd/controllers/batch_file_controller.go`
 - Base path: `/api/v1`
-- Auth: Composite (API key or Supabase JWT)
 - Access: user-scoped. Non-admin requests are restricted to their own user_id.
 
 ## POST /api/v1/tasks/batch/upload
 Purpose: upload a file containing email addresses for batch verification. Processing happens asynchronously.
 
-Auth: required.
-
 ### Request
 Headers:
-- `Authorization: Bearer <api_key_or_jwt>` or `X-API-Key: <api_key>`
 - `Content-Type: multipart/form-data`
 
 Form fields:
@@ -35,7 +31,6 @@ Example request:
 ```bash
 curl -X POST \
   'https://api.example.com/api/v1/tasks/batch/upload' \
-  -H 'Authorization: Bearer <api_key_or_jwt>' \
   -F 'file=@emails.csv' \
   -F 'webhook_url=https://example.com/webhook' \
   -F 'email_column=email'
@@ -74,7 +69,7 @@ Errors:
 ## GET /api/v1/tasks/batch/uploads/{upload_id}
 Purpose: fetch the current status of a batch upload and its task.
 
-Auth: required. Non-admins can only access their own uploads.
+Access: Non-admins can only access their own uploads.
 
 Path parameter:
 - `upload_id` (UUID)
@@ -82,8 +77,7 @@ Path parameter:
 Example request:
 ```bash
 curl -X GET \
-  'https://api.example.com/api/v1/tasks/batch/uploads/7d3df4c6-9a7d-4d16-9f2b-2a5ddf4f4f53' \
-  -H 'Authorization: Bearer <api_key_or_jwt>'
+  'https://api.example.com/api/v1/tasks/batch/uploads/7d3df4c6-9a7d-4d16-9f2b-2a5ddf4f4f53'
 ```
 
 ### Response
