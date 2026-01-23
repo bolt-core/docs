@@ -4,13 +4,7 @@ description: "List batch verification tasks with optional filters."
 ---
 
 ## Overview
-
-- Source: `services/go/app/cmd/controllers/task_controller.go`
-- Base path: `/api/v1`
-- Access: user-scoped. Non-admin requests are restricted to their own user_id.
-- Admins can query across users using `user_id` where allowed.
-- `user_id` is never accepted in request bodies.
-
+List batch verification tasks with pagination and optional filters, including whether tasks are file-backed.
 
 ## GET /api/v1/tasks
 

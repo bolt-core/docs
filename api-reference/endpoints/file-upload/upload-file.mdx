@@ -4,9 +4,7 @@ description: "Upload a file for batch verification."
 ---
 
 ## Overview
-- Source: `services/go/app/cmd/controllers/batch_file_controller.go`
-- Base path: `/api/v1`
-- Access: user-scoped. Non-admin requests are restricted to their own user_id.
+Upload a file of email addresses to start a batch verification task. Processing runs asynchronously, and you can optionally provide a webhook for completion notifications.
 
 
 ## POST /api/v1/tasks/batch/upload

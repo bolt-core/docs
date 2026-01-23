@@ -4,8 +4,7 @@ description: "Field definitions for batch verification metrics."
 ---
 
 ## Overview
-- Source: `services/go/app/cmd/controllers/task_controller.go`
-- Base path: `/api/v1`
+Definitions for the fields used in batch verification metrics responses.
 
 ## Batch verification metrics fields
 
@@ -16,4 +15,3 @@ description: "Field definitions for batch verification metrics."
 - `verification_status`: counts by result (`exists`, `not_exists`, `catchall`, `invalid_syntax`, `unknown`) plus `role_based` and `disposable_domain_emails`.
 - `last_verification_requested_at`: last time a verification was requested.
 - `last_verification_completed_at`: last time a verification completed.
-

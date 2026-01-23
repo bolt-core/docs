@@ -4,13 +4,7 @@ description: "List email jobs for a batch verification task."
 ---
 
 ## Overview
-
-- Source: `services/go/app/cmd/controllers/task_controller.go`
-- Base path: `/api/v1`
-- Access: user-scoped. Non-admin requests are restricted to their own user_id.
-- Admins can query across users using `user_id` where allowed.
-- `user_id` is never accepted in request bodies.
-
+List the email jobs for a batch verification task, including per-email results when available.
 
 ## GET /api/v1/tasks/{id}/jobs
 

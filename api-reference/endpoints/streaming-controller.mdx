@@ -4,10 +4,7 @@ description: "Reference documentation for streaming."
 ---
 
 ## Overview
-- Source: `services/go/app/cmd/controllers/streaming_controller.go`
-- Base path: `/api/v1`
-- Availability: endpoints are registered only when `Server.StreamingEnabled` is true.
-- Timeout: `Server.StreamingTimeout` (defaults to 30s when unset)
+Stream real-time verification progress for a single email using WebSocket or Server-Sent Events, with step-by-step updates as checks run.
 
 ## GET /api/v1/verify/stream (WebSocket)
 Purpose: stream real-time verification progress over WebSocket.

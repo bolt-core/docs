@@ -4,13 +4,7 @@ description: "Download batch verification results as a file."
 ---
 
 ## Overview
-
-- Source: `services/go/app/cmd/controllers/task_controller.go`
-- Base path: `/api/v1`
-- Access: user-scoped. Non-admin requests are restricted to their own user_id.
-- Admins can query across users using `user_id` where allowed.
-- `user_id` is never accepted in request bodies.
-
+Download batch verification results as a file in CSV, TXT, or XLSX format.
 
 ## GET /api/v1/tasks/{id}/download
 
