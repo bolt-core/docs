@@ -6,11 +6,11 @@ description: "Revoke an API key."
 ## Overview
 - Source: `services/go/app/cmd/controllers/api_key_controller.go`
 - Base path: `/api/v1`
-- Access: user-scoped; admins can act on behalf of another user via `user_id` (required when the admin token does not map to a user UUID).
+- Access: user-scoped.
 
 
 ## DELETE /api/v1/api-keys/{id}
-Purpose: revoke an API key. Admins can revoke any key; non-admins can only revoke their own keys.
+Purpose: revoke an API key.
 
 Path parameter:
 - `id` (UUID)
@@ -32,6 +32,5 @@ Example response:
 Errors:
 - `400` invalid UUID.
 - `401` unauthorized.
-- `403` forbidden (non-admin attempting to revoke another user key).
 - `404` key not found.
 - `500` internal error.

@@ -6,14 +6,13 @@ description: "List active API keys."
 ## Overview
 - Source: `services/go/app/cmd/controllers/api_key_controller.go`
 - Base path: `/api/v1`
-- Access: user-scoped; admins can act on behalf of another user via `user_id` (required when the admin token does not map to a user UUID).
+- Access: user-scoped.
 
 
 ## GET /api/v1/api-keys
 Purpose: list active API keys for the authenticated user.
 
 Query parameters:
-- `user_id` (UUID, admin only; required when the admin token does not map to a user UUID)
 - `from` (RFC3339 timestamp, optional): filter by `last_used_at` >= from
 - `to` (RFC3339 timestamp, optional): filter by `last_used_at` less than or equal to `to`
 

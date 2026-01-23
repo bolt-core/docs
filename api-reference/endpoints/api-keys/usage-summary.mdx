@@ -6,14 +6,13 @@ description: "Usage metrics for API keys."
 ## Overview
 - Source: `services/go/app/cmd/controllers/api_key_controller.go`
 - Base path: `/api/v1`
-- Access: user-scoped; admins can act on behalf of another user via `user_id` (required when the admin token does not map to a user UUID).
+- Access: user-scoped.
 
 
 ## GET /api/v1/api-keys/usage
 Purpose: return API key usage metrics for a user.
 
 Query parameters:
-- `user_id` (UUID, admin only)
 - `from` (RFC3339, optional)
 - `to` (RFC3339, optional)
 
@@ -61,6 +60,6 @@ Example response:
 ```
 
 Errors:
-- `400` invalid `user_id` or date params, or missing `user_id` for admin requests without an authenticated user.
+- `400` invalid date params.
 - `401` unauthorized.
 - `500` internal error.
