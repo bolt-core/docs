@@ -1,25 +1,63 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "Introduction"
+description: "Verify emails with Bolt Route's API before you send."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Why you are here
 
-## Welcome
+You want to stop bad addresses before they hit your ESP, protect sender reputation, and keep acquisition lists clean. The Bolt Route Email Verification API lets you validate a single address at signup or run large list checks in the background without building a full pipeline yourself.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## What you can do
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+<CardGroup cols={2}>
+  <Card
+    title="Verify one address"
+    icon="bolt"
+    href="/api-reference/endpoints/realtime-verification"
+    cta="Realtime verification"
+  >
+    Check deliverability signals on a single email in real time.
+  </Card>
+  <Card
+    title="Verify a list"
+    icon="list-check"
+    href="/api-reference/endpoints/batch-verification/create-task"
+    cta="Create batch task"
+  >
+    Submit a list and download results when processing completes.
+  </Card>
+  <Card
+    title="Upload a file"
+    icon="file-arrow-up"
+    href="/api-reference/endpoints/file-upload/upload-file"
+    cta="Upload CSV/XLSX"
+  >
+    Send a file and let the system handle parsing and validation.
+  </Card>
+  <Card
+    title="Track usage"
+    icon="chart-simple"
+    href="/api-reference/endpoints/metrics-controller"
+    cta="View metrics"
+  >
+    Pull verification metrics and monitor usage over time.
+  </Card>
+</CardGroup>
 
-## Authorization
+## How it works (quick flow)
 
-For API key usage, see the [Authorization](/api-reference/authorization) guide.
+1. Create an API key.
+2. Pick realtime for one-off checks or batch for large lists.
+3. Read the verification result and take action in your app.
+
+## Base URL and versioning
+
+All endpoints live under `/api/v1`. Examples use `https://api.example.com` as a placeholder, so replace it with your production or staging base URL.
+
+## Authentication
+
+Every request requires your API key. Send it with the `Authorization: Bearer <api_key>` header. See [Authorization](/api-reference/authorization) for details.
+
+## Understanding results
+
+You get an overall `status` plus supporting signals (for example `is_disposable`, `is_role_based`, `is_catchall`, and DNS/SMTP checks). Treat `exists` as deliverable, `not_exists` as a hard fail, `invalid_syntax` as invalid input, and `unknown` or `catchall` as cases that need your business logic.
