@@ -112,6 +112,12 @@
             ]
           },
           {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks"
+            ]
+          },
+          {
             "group": "Reporting",
             "pages": [
               "api-reference/endpoints/metrics-controller"
@@ -129,8 +135,7 @@
             "pages": [
               "api-reference/endpoint/get",
               "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/endpoint/delete"
             ]
           }
         ]
