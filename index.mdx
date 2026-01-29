@@ -1,97 +1,58 @@
 ---
 title: "Introduction"
-description: "Welcome to the new home for your documentation"
+description: "A practical guide to verifying emails and protecting deliverability"
 ---
 
-## Setting up
+## You are here to keep your list clean
 
-Get your documentation site up and running in minutes.
+You want to catch bad or risky addresses before they reach your ESP, protect sender reputation, and keep signup flows healthy. This guide shows you how to use Bolt Route Email Verification to do that without building a complex pipeline.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+## Choose the workflow that fits your job
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
+    title="Realtime verification"
+    icon="bolt"
+    href="/api-reference/endpoints/realtime-verification"
+    cta="Check one address"
   >
-    Edit your docs locally and preview them in real time.
+    Decide instantly at signup, form submit, or CRM entry.
   </Card>
   <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
+    title="Batch verification"
+    icon="list-check"
+    href="/api-reference/endpoints/batch-verification/create-task"
+    cta="Create a task"
   >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+    Verify large lists asynchronously and download results.
   </Card>
   <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
+    title="File upload"
+    icon="file-arrow-up"
+    href="/api-reference/endpoints/file-upload/upload-file"
+    cta="Upload CSV/XLSX"
   >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
+    Drop a file and let Bolt Route parse and verify it.
   </Card>
   <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
+    title="API keys"
+    icon="key"
+    href="/api-reference/endpoints/api-keys/create-key"
+    cta="Get a key"
   >
-    Add sample code to demonstrate how to use your product.
+    Create a key and start verifying in minutes.
   </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+</CardGroup>
 
-## Need inspiration?
+## What success looks like
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+- Clean signups with realtime checks at the point of capture
+- List hygiene through batch tasks or file uploads
+- Clear decisions using `exists`, `not_exists`, `catchall`, and `unknown`
+- Usage visibility so you can manage credits and budgets
+
+## When you need details
+
+- Set up your key in [Authorization](/api-reference/authorization).
+- Dive into the [API reference](/api-reference/introduction) for schemas and examples.
+- Track volume in [Metrics](/api-reference/endpoints/metrics-controller).
