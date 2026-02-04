@@ -36,6 +36,15 @@
             ]
           },
           {
+            "group": "Integrations",
+            "pages": [
+              "integrations/zapier",
+              "integrations/n8n",
+              "integrations/google-sheets",
+              "integrations/make"
+            ]
+          },
+          {
             "group": "Customization",
             "pages": [
               "essentials/settings",

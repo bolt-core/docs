@@ -1,0 +1,57 @@
+---
+title: "Zapier"
+description: "Verify emails in Zapier using Bolt Route."
+---
+
+## What you will build
+Create a Zap that sends email addresses to Bolt Route and returns a verification status you can use to route or update records.
+
+## Step 1: Create your Bolt Route API key
+1. Create an account or log in to Bolt Route.
+2. Open [app.boltroute.ai/api](https://app.boltroute.ai/api).
+3. Click **New key**.
+4. In the **Generate API key** dialog, select **Zapier** to tag usage. Keys are universal, so the selection only tags usage.
+5. Enter a key name, then click **Create key**.
+6. Copy the key now. It is shown only once.
+
+## Step 2: Realtime verification in Zapier
+1. Create a new Zap and choose your trigger app.
+2. Add an action and select **Webhooks by Zapier**.
+3. Choose **Custom Request**.
+4. Set **Method** to `POST` and **URL** to `https://api.boltroute.ai/api/v1/verify`.
+5. Set **Headers**:
+
+```text
+Authorization: Bearer <api_key>
+Content-Type: application/json
+```
+
+6. In **Data**, add a field named `email` and map it to the email from your trigger.
+7. Test the step. The response includes fields like `status`, `is_disposable`, and `is_role_based`.
+
+## Step 3: Batch verification in Zapier
+1. Make sure you have a list of emails available as a line-item array or from a previous step.
+2. Add an action and select **Webhooks by Zapier**.
+3. Choose **Custom Request**.
+4. Set **Method** to `POST` and **URL** to `https://api.boltroute.ai/api/v1/tasks`.
+5. Set **Headers**:
+
+```text
+Authorization: Bearer <api_key>
+Content-Type: application/json
+```
+
+6. In **Data**, send JSON with an `emails` array. Optionally add `webhook_url` to receive a completion callback.
+
+```json
+{
+  "emails": ["user1@example.com", "user2@example.com"],
+  "webhook_url": "https://example.com/webhook"
+}
+```
+
+7. The response includes a task `id`. Use it with [Get task](/api-reference/endpoints/batch-verification/get-task) or [Download results](/api-reference/endpoints/batch-verification/download-results).
+
+<Note>
+Replace `https://api.boltroute.ai` with your Bolt Route API base URL if different.
+</Note>

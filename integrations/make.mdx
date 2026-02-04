@@ -1,0 +1,62 @@
+---
+title: "Make.com"
+description: "Verify emails in Make.com using Bolt Route."
+---
+
+## What you will build
+Create a Make.com scenario that verifies emails in real time or submits batch tasks for larger lists.
+
+## Step 1: Create your Bolt Route API key
+1. Create an account or log in to Bolt Route.
+2. Open [app.boltroute.ai/api](https://app.boltroute.ai/api).
+3. Click **New key**.
+4. In the **Generate API key** dialog, select **Custom** if it is available. If not, pick any option such as **Zapier**. Keys are universal, so the selection only tags usage.
+5. Enter a key name, then click **Create key**.
+6. Copy the key now. It is shown only once.
+
+## Step 2: Realtime verification in Make.com
+1. Create a new scenario and add your trigger module.
+2. Add an **HTTP** module and choose **Make a request**.
+3. Set **Method** to `POST` and **URL** to `https://api.boltroute.ai/api/v1/verify`.
+4. Set **Headers**:
+
+```text
+Authorization: Bearer <api_key>
+Content-Type: application/json
+```
+
+5. Set **Body type** to `Raw` and **Content type** to `JSON`.
+6. Add the JSON body with the email from your trigger.
+
+```json
+{ "email": "user@example.com" }
+```
+
+7. Run the module once. Use response fields like `status`, `is_disposable`, and `is_role_based` in later steps.
+
+## Step 3: Batch verification in Make.com
+1. Collect emails into an array using an Array Aggregator or a previous module.
+2. Add an **HTTP** module and choose **Make a request**.
+3. Set **Method** to `POST` and **URL** to `https://api.boltroute.ai/api/v1/tasks`.
+4. Set **Headers**:
+
+```text
+Authorization: Bearer <api_key>
+Content-Type: application/json
+```
+
+5. Set **Body type** to `Raw` and **Content type** to `JSON`.
+6. Send JSON with an `emails` array. Optionally include `webhook_url` to receive a completion callback.
+
+```json
+{
+  "emails": ["user1@example.com", "user2@example.com"],
+  "webhook_url": "https://example.com/webhook"
+}
+```
+
+7. The response includes a task `id`. Use it with [Get task](/api-reference/endpoints/batch-verification/get-task) or [Download results](/api-reference/endpoints/batch-verification/download-results).
+
+<Note>
+Replace `https://api.boltroute.ai` with your Bolt Route API base URL if different.
+</Note>
