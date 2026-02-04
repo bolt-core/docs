@@ -1,10 +1,10 @@
 ---
 title: "Google Sheets"
-description: "Verify emails in Google Sheets using Bolt Route."
+description: "Verify emails in Google Sheets using the Bolt Route add-on."
 ---
 
 ## What you will build
-Use a custom function to verify single emails in a sheet and a menu action to submit batch verification tasks.
+Use the Bolt Route Google Sheets add-on to connect your API key, verify lists, and import results.
 
 ## Step 1: Create your Bolt Route API key
 1. Create an account or log in to Bolt Route.
@@ -14,73 +14,53 @@ Use a custom function to verify single emails in a sheet and a menu action to su
 5. Enter a key name, then click **Create key**.
 6. Copy the key now. It is shown only once.
 
-## Step 2: Realtime verification in Google Sheets
-1. Open your spreadsheet.
-2. Go to **Extensions** -> **Apps Script**.
-3. Replace the default code with the script below.
-4. In **Project Settings**, add a script property named `BOLTROUTE_API_KEY` and paste your key as the value.
-5. Save, then run `BOLTVERIFY` once in the Apps Script editor to authorize.
-6. Back in the sheet, use `=BOLTVERIFY(A2)` to return the `status` for the email in `A2`. You can also pass a field name like `=BOLTVERIFY(A2, "is_disposable")`.
+## Step 2: Install the Bolt Route add-on
+1. Open Google Sheets.
+2. Go to **Extensions** -> **Add-ons** -> **Get add-ons**.
+3. Search for **Bolt Route** or open the installation link provided by your account team.
+4. Click **Install** and grant permissions.
+5. Refresh the spreadsheet.
 
-```js
-const API_BASE = 'https://api.boltroute.ai';
+## Step 3: Connect your API key
+1. Open **Extensions** -> **Bolt Route** -> **Get Started**.
+2. Click **Start setup**.
+3. Paste your API key, then click **Test Connection**.
+4. Click **Continue**, then **Start Using**.
 
-function getApiKey_() {
-  const key = PropertiesService.getScriptProperties().getProperty('BOLTROUTE_API_KEY');
-  if (!key) throw new Error('Missing BOLTROUTE_API_KEY in Script Properties.');
-  return key;
-}
+## Step 4: Verify emails from your sheet
+1. Select a column or range that contains emails.
+2. Use **Extensions** -> **Bolt Route** -> **Verify Emails**, or open **Extensions** -> **Bolt Route** -> **Home** and click **Verify Emails**.
+3. Single-cell selections verify immediately and write results in new columns on the same row.
+4. Ranges and full columns create a verification task and write results when the task completes.
+5. Lists above 10,000 emails prompt you to confirm a batch upload.
 
-function BOLTVERIFY(email, field) {
-  if (!email) return '';
-  const payload = JSON.stringify({ email: email });
-  const response = UrlFetchApp.fetch(`${API_BASE}/api/v1/verify`, {
-    method: 'post',
-    contentType: 'application/json',
-    headers: { Authorization: `Bearer ${getApiKey_()}` },
-    payload: payload,
-    muteHttpExceptions: true,
-  });
+## Step 5: Track batch tasks and import results
+1. Open **Extensions** -> **Bolt Route** -> **Batch Verifications**.
+2. Review statuses: Processing, Completed, Completed with errors, Failed.
+3. Click **Import** to write results to a new sheet, the current sheet at the cursor, or a specific range.
+4. Click **Emails** on a task to review per-email results and import selected jobs.
 
-  const data = JSON.parse(response.getContentText());
-  if (field) return data[field] ?? '';
-  return data.status ?? '';
-}
+## Step 6: Configure preferences
+1. Open **Extensions** -> **Bolt Route** -> **Settings**.
+2. Update your API key and preferences like auto-formatting, duplicate handling, default import location, and task refresh interval.
+3. Review daily quota usage in the same panel.
 
-function onOpen() {
-  SpreadsheetApp.getUi()
-    .createMenu('Bolt Route')
-    .addItem('Create batch task from selection', 'boltCreateBatchFromSelection')
-    .addToUi();
-}
-
-function boltCreateBatchFromSelection() {
-  const range = SpreadsheetApp.getActiveRange();
-  const emails = range.getValues().flat().map(String).map(s => s.trim()).filter(Boolean);
-  if (!emails.length) {
-    SpreadsheetApp.getUi().alert('Select at least one email address.');
-    return;
-  }
-
-  const response = UrlFetchApp.fetch(`${API_BASE}/api/v1/tasks`, {
-    method: 'post',
-    contentType: 'application/json',
-    headers: { Authorization: `Bearer ${getApiKey_()}` },
-    payload: JSON.stringify({ emails: emails }),
-    muteHttpExceptions: true,
-  });
-
-  const data = JSON.parse(response.getContentText());
-  SpreadsheetApp.getUi().alert(`Batch task created: ${data.id}`);
-}
-```
-
-## Step 3: Batch verification in Google Sheets
-1. Select the range of emails you want to verify.
-2. Use **Bolt Route** -> **Create batch task from selection**.
-3. Copy the task `id` from the confirmation dialog.
-4. Use it with [Get task](/api-reference/endpoints/batch-verification/get-task) or [Download results](/api-reference/endpoints/batch-verification/download-results).
+## Results columns
+Results are written with headers aligned to your selection. If headers are missing, the add-on inserts them above the results. Columns include:
+- Email
+- Status
+- Is Role-Based
+- Is Disposable
+- Has MX Records
+- Domain Name
+- Is Catchall
+- Validated At
+- Has Reverse DNS
+- Host Name
+- Server Type
+- Unknown Reason
+- Needs Physical Verify
 
 <Note>
-Replace `https://api.boltroute.ai` with your Bolt Route API base URL if different.
+Full-column selections are trimmed to the used rows in the sheet. Duplicate emails are de-duplicated before submission, and results are aligned back to every matching row.
 </Note>
