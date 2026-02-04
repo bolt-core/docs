@@ -4,7 +4,7 @@ description: "Verify emails in Zapier using Bolt Route."
 ---
 
 ## What you will build
-Create a Zap that sends email addresses to Bolt Route and returns a verification status you can use to route or update records.
+Create a Zap using the **Bolt Route - Email Validation & Verification** app to verify single emails or submit bulk tasks and act on the results.
 
 ## Step 1: Create your Bolt Route API key
 1. Create an account or log in to Bolt Route.
@@ -14,44 +14,25 @@ Create a Zap that sends email addresses to Bolt Route and returns a verification
 5. Enter a key name, then click **Create key**.
 6. Copy the key now. It is shown only once.
 
-## Step 2: Realtime verification in Zapier
-1. Create a new Zap and choose your trigger app.
-2. Add an action and select **Webhooks by Zapier**.
-3. Choose **Custom Request**.
-4. Set **Method** to `POST` and **URL** to `https://api.boltroute.ai/api/v1/verify`.
-5. Set **Headers**:
+## Step 2: Connect Bolt Route to Zapier
+1. In Zapier, create a new Zap or open an existing one.
+2. Add a step and search for **Bolt Route - Email Validation & Verification**.
+3. Click **Sign in** and paste your API key when prompted.
+4. Name the connection and continue.
 
-```text
-Authorization: Bearer <api_key>
-Content-Type: application/json
-```
+## Step 3: Realtime verification in Zapier
+1. Add an **Action** step and select **Bolt Route - Email Validation & Verification**.
+2. Choose **Verify Single Email**.
+3. Map the **Email Address** field from your trigger.
+4. Test the step. The output includes `status`, `is_disposable`, and `is_role_based`.
 
-6. In **Data**, add a field named `email` and map it to the email from your trigger.
-7. Test the step. The response includes fields like `status`, `is_disposable`, and `is_role_based`.
+## Step 4: Batch verification in Zapier
+1. Add an **Action** step and choose **Create Bulk Verification Task**.
+2. Map **Emails** to a list of addresses. Provide one email per line item, up to 10,000.
+3. To receive per-email completion results, create a separate Zap with the **Task Completed** trigger and copy the webhook URL shown in that trigger setup.
+4. Paste the webhook URL into **Webhook URL** in your bulk task action.
+5. Test the step. The response includes a task `id`.
 
-## Step 3: Batch verification in Zapier
-1. Make sure you have a list of emails available as a line-item array or from a previous step.
-2. Add an action and select **Webhooks by Zapier**.
-3. Choose **Custom Request**.
-4. Set **Method** to `POST` and **URL** to `https://api.boltroute.ai/api/v1/tasks`.
-5. Set **Headers**:
-
-```text
-Authorization: Bearer <api_key>
-Content-Type: application/json
-```
-
-6. In **Data**, send JSON with an `emails` array. Optionally add `webhook_url` to receive a completion callback.
-
-```json
-{
-  "emails": ["user1@example.com", "user2@example.com"],
-  "webhook_url": "https://example.com/webhook"
-}
-```
-
-7. The response includes a task `id`. Use it with [Get task](/api-reference/endpoints/batch-verification/get-task) or [Download results](/api-reference/endpoints/batch-verification/download-results).
-
-<Note>
-Replace `https://api.boltroute.ai` with your Bolt Route API base URL if different.
-</Note>
+## Step 5: Track progress or results
+1. Add the **Find Task by ID** search and map the task `id` to check status, counts, and completion.
+2. Or use the **Task Completed** trigger output to update your CRM, spreadsheet, or list as each email finishes.
