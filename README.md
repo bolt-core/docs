@@ -1,43 +1,57 @@
-# Mintlify Starter Kit
+# Bolt Route Email Verification Docs
 
-Use the starter kit to get your docs deployed and ready to customize.
+Source for the public documentation at [docs.boltroute.ai](https://docs.boltroute.ai).
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+Quick links:
+- Docs: [docs.boltroute.ai](https://docs.boltroute.ai)
+- Dashboard: [dashboard.boltroute.ai](https://dashboard.boltroute.ai)
+- Support: [support@boltroute.ai](mailto:support@boltroute.ai)
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+**Quick start**
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+Install the Mintlify CLI:
 
-## Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
-
-```
+```bash
 npm i -g mint
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+Start the local preview server from the repo root:
 
-```
+```bash
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+Open `http://localhost:3000`.
 
-## Publishing changes
+**Local development**
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+- Navigation and site config live in `docs.json`.
+- Content lives in MDX files with frontmatter `title` and `description`.
+- New pages must be added to `docs.json` to appear in navigation.
 
-## Need help?
+Content map:
+- `guides/` for guidance and announcements
+- `integrations/` for tool integrations
+- `api-reference/` for API endpoint docs
+- `snippets/` for reusable MDX fragments
 
-### Troubleshooting
+**Deploy**
 
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
+Production is managed by the Mintlify GitHub app. Install it from the [dashboard](https://dashboard.mintlify.com/settings/organization/github-app). Changes to the default branch deploy automatically.
 
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+**Contributing**
+
+1. Create a branch.
+2. Make MDX updates and preview with `mint dev`.
+3. Open a PR.
+
+**Content guidelines**
+
+- Use clear, task‑oriented headings.
+- Keep paragraphs short and use lists for steps.
+- Avoid marketing language in how‑to pages.
+- Include `title` and `description` frontmatter on every page.
+
+**Support**
+
+Email [support@boltroute.ai](mailto:support@boltroute.ai) for help.
