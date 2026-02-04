@@ -4,7 +4,7 @@ description: "Verify emails in n8n using Bolt Route."
 ---
 
 ## What you will build
-Create an n8n workflow that verifies emails in real time or submits a batch task for larger lists.
+Create an n8n workflow using the **Bolt Route - Email Validation & Verification** node to verify single emails or submit bulk tasks.
 
 ## Step 1: Create your Bolt Route API key
 1. Create an account or log in to Bolt Route.
@@ -14,24 +14,33 @@ Create an n8n workflow that verifies emails in real time or submits a batch task
 5. Enter a key name, then click **Create key**.
 6. Copy the key now. It is shown only once.
 
-## Step 2: Realtime verification in n8n
+## Step 2: Install the community node
+1. In n8n, go to **Settings** -> **Community Nodes**.
+2. Click **Install** and enter `n8n-nodes-email-verifier`.
+3. Restart n8n if the node does not appear in the editor.
+4. If you are already building a workflow, search for **Bolt Route - Email Validation & Verification** in the node picker. If it does not appear, install it from **Community Nodes**.
+
+## Step 3: Create credentials
+1. Open **Credentials** and click **Create New**.
+2. Search for **Bolt Route API**.
+3. Paste your API key.
+4. Confirm the **Base URL** is `https://api.boltroute.ai/api/v1` unless you use a custom endpoint.
+5. Click **Test Connection** and save.
+
+## Step 4: Realtime verification in n8n
 1. Create a new workflow and add your trigger node.
-2. Add an **HTTP Request** node.
-3. Set **Method** to `POST` and **URL** to `https://api.boltroute.ai/api/v1/verify`.
-4. Set **Content Type** to `JSON`.
-5. Add a header named `Authorization` with the value `Bearer <api_key>`.
-6. In **Body Parameters**, add `email` and map it to the email from your trigger.
-7. Execute the node to see the response. Use fields like `status`, `is_disposable`, and `is_role_based` in downstream steps.
+2. Add **Bolt Route - Email Validation & Verification**.
+3. Set **Resource** to **Email Verification** and **Operation** to **Verify Single Email**.
+4. Map **Email Address** from your trigger.
+5. Execute the node. Use `status`, `is_disposable`, and `is_role_based` in downstream steps.
 
-## Step 3: Batch verification in n8n
-1. Collect emails into a single item with an `emails` array. Use an Item Lists or Merge node if your data starts as one email per item.
-2. Add an **HTTP Request** node.
-3. Set **Method** to `POST` and **URL** to `https://api.boltroute.ai/api/v1/tasks`.
-4. Set **Content Type** to `JSON`.
-5. Add a header named `Authorization` with the value `Bearer <api_key>`.
-6. In **Body Parameters**, send `emails` as an array. Optionally include `webhook_url` to receive a completion callback.
-7. The response includes a task `id`. Use it with [Get task](/api-reference/endpoints/batch-verification/get-task) or [Download results](/api-reference/endpoints/batch-verification/download-results).
+## Step 5: Batch verification in n8n
+1. Add **Bolt Route - Email Validation & Verification**.
+2. Set **Resource** to **Email Verification** and **Operation** to **Create Bulk Task**.
+3. Map **Emails** to a list of addresses (one per item, up to 10,000).
+4. Optionally set **Webhook URL** if you have a receiving workflow.
+5. Execute the node. The response includes a task `id`.
 
-<Note>
-Replace `https://api.boltroute.ai` with your Bolt Route API base URL if different.
-</Note>
+## Step 6: Track results
+1. Add another **Bolt Route - Email Validation & Verification** node.
+2. Choose **Get Task** to check `progress_percent` or **Download Task Results** to fetch the CSV/XLSX.
