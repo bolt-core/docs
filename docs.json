@@ -35,6 +35,14 @@
             ]
           },
           {
+            "group": "Compatibility",
+            "pages": [
+              "guides/context7-compatibility",
+              "guides/deepwiki-compatibility",
+              "guides/llms-txt"
+            ]
+          },
+          {
             "group": "Integrations",
             "pages": [
               "integrations/zapier",
