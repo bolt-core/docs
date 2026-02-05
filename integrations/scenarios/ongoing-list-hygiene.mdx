@@ -1,0 +1,74 @@
+---
+title: "Ongoing List Hygiene"
+description: "Re-verify dormant lists on a schedule to keep deliverability and reactivation campaigns healthy."
+---
+
+## Use Case Summary
+Run recurring email verification to keep long-lived lists clean. This is especially useful before reactivation campaigns or seasonal sends where address quality has decayed.
+
+## Where Verification Fits
+Workflow at a glance:
+<CardGroup cols={2}>
+  <Card title="Select">
+    Choose dormant or risky segments to re-verify.
+  </Card>
+  <Card title="Verify">
+    Run scheduled batch tasks on the segment.
+  </Card>
+  <Card title="Compare">
+    Track shifts in `exists`, `unknown`, and `catchall`.
+  </Card>
+  <Card title="Suppress">
+    Update suppression lists before reactivation.
+  </Card>
+</CardGroup>
+
+## Recommended Flow
+1. Select dormant or high-risk segments (inactive, old, or imported lists).
+2. Run a batch verification task on a schedule.
+3. Compare results to previous runs to spot decay.
+4. Suppress risky segments before reactivation sends.
+
+## Minimal API Example
+```bash
+curl -X POST \
+  'https://api.boltroute.ai/api/v1/tasks' \
+  -H 'Content-Type: application/json' \
+  -d '{"emails":["user1@example.com","user2@example.com"]}'
+```
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "email_count": 2,
+  "domain_count": 1
+}
+```
+
+## Decision Rules
+Common hygiene rules:
+- Suppress `invalid_syntax` and `not_exists` immediately.
+- Review `catchall` and `unknown` before reactivation.
+- Suppress `is_disposable` for reputation-sensitive campaigns.
+
+## Operational Notes
+- Space re-verification runs to avoid unnecessary credit usage.
+- Track list decay by monitoring changes in `exists` versus `unknown` counts.
+- Use [Download batch verification results](/api-reference/endpoints/batch-verification/download-results) to keep an audit trail.
+
+<Tip>
+  Keep a small baseline segment to measure list decay over time.
+</Tip>
+
+## Success Metrics
+- Higher delivery rates on reactivation campaigns.
+- Fewer bounces over time.
+- Cleaner suppression lists and lower send costs.
+
+## Related Integrations
+- [Create batch verification task](/api-reference/endpoints/batch-verification/create-task)
+- [Get batch verification task](/api-reference/endpoints/batch-verification/get-task)
+- [Google Sheets](/integrations/google-sheets)
+- [Zapier](/integrations/zapier)
+- [n8n](/integrations/n8n)
+- [Make](/integrations/make)

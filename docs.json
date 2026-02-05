@@ -37,6 +37,15 @@
               "integrations/google-sheets",
               "integrations/make"
             ]
+          },
+          {
+            "group": "Scenarios",
+            "pages": [
+              "integrations/scenarios/realtime-signup-verification",
+              "integrations/scenarios/batch-list-cleaning",
+              "integrations/scenarios/webhook-automation",
+              "integrations/scenarios/ongoing-list-hygiene"
+            ]
           }
         ]
       },

@@ -1,0 +1,80 @@
+---
+title: "Webhook Automation"
+description: "Automate verification flows by receiving webhook events and updating downstream tools."
+---
+
+## Use Case Summary
+Use webhooks when you want verification to trigger downstream automation without polling. This is ideal for routing results into CRMs, spreadsheets, or internal workflows.
+
+## Where Verification Fits
+Workflow at a glance:
+<CardGroup cols={2}>
+  <Card title="Trigger">
+    Capture email(s) from a form or app event.
+  </Card>
+  <Card title="Create task">
+    Submit a batch task with a `webhook_url`.
+  </Card>
+  <Card title="Receive">
+    Handle per-email or task completion webhooks.
+  </Card>
+  <Card title="Route">
+    Update your CRM, spreadsheet, or workflow.
+  </Card>
+</CardGroup>
+
+## Recommended Flow
+1. Capture one or more emails from a form or app event.
+2. Create a batch task and include a `webhook_url`.
+3. Receive per-email or task completion webhooks.
+4. Map verification signals to actions in your CRM or automation tool.
+
+## Minimal API Example
+```bash
+curl -X POST \
+  'https://api.boltroute.ai/api/v1/tasks' \
+  -H 'Content-Type: application/json' \
+  -d '{"emails":["user@example.com"],"webhook_url":"https://example.com/webhook"}'
+```
+
+Example webhook payload:
+```json
+{
+  "event_type": "email_verification_completed",
+  "task_id": "550e8400-e29b-41d4-a716-446655440000",
+  "completed_at": "2025-01-01T12:01:12Z",
+  "data": {
+    "job": {
+      "email_address": "user@example.com",
+      "email": { "status": "exists" }
+    }
+  }
+}
+```
+
+## Decision Rules
+Common webhook routing rules:
+- Reject or suppress when `status` is `invalid_syntax` or `not_exists`.
+- Hold for review when `status` is `catchall` or `unknown`.
+- Accept or advance a lead when `status` is `exists`.
+
+## Operational Notes
+- Webhook URLs must be HTTPS and respond with a `2xx` status.
+- Verify signatures when `WEBHOOK_SECRET_KEY` is configured.
+- Use `X-Webhook-ID` for idempotency if you process retries.
+
+<Info>
+  Acknowledge webhooks quickly, then process updates asynchronously to avoid retries.
+</Info>
+
+## Success Metrics
+- Faster lead routing and reduced manual review.
+- Lower operational overhead from polling.
+- Consistent verification signals across tools.
+
+## Related Integrations
+- [Webhooks](/api-reference/webhooks)
+- [Create batch verification task](/api-reference/endpoints/batch-verification/create-task)
+- [Zapier](/integrations/zapier)
+- [n8n](/integrations/n8n)
+- [Make](/integrations/make)

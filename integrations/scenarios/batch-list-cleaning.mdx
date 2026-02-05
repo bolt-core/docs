@@ -1,0 +1,76 @@
+---
+title: "Batch List Cleaning"
+description: "Clean large email lists before campaigns or CRM imports using batch verification."
+---
+
+## Use Case Summary
+Use batch email verification to clean large lists before a campaign, CRM import, or migration. This protects deliverability and keeps your lists focused on reachable inboxes.
+
+## Where Verification Fits
+Workflow at a glance:
+<CardGroup cols={2}>
+  <Card title="Export">
+    Pull the list from your CRM, ESP, or database.
+  </Card>
+  <Card title="Verify">
+    Create a batch task with up to 10,000 emails.
+  </Card>
+  <Card title="Segment">
+    Split results by `status` and risk flags.
+  </Card>
+  <Card title="Import">
+    Load clean segments back into your ESP or CRM.
+  </Card>
+</CardGroup>
+
+## Recommended Flow
+1. Export the list of emails from your CRM or database.
+2. Create a batch verification task with up to 10,000 emails.
+3. Poll the task status or wait for a webhook notification.
+4. Download results and segment the list by `status` and risk flags.
+5. Import only acceptable addresses into your next campaign.
+
+## Minimal API Example
+```bash
+curl -X POST \
+  'https://api.boltroute.ai/api/v1/tasks' \
+  -H 'Content-Type: application/json' \
+  -d '{"emails":["user1@example.com","user2@example.com"]}'
+```
+
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "email_count": 2,
+  "domain_count": 1
+}
+```
+
+## Decision Rules
+Common batch segmentation rules:
+- Keep `exists` addresses for campaigns.
+- Suppress `invalid_syntax` and `not_exists`.
+- Review `catchall` and `unknown` before sending.
+- Suppress `is_disposable` for most lifecycle or paid campaigns.
+
+## Operational Notes
+- Batch processing is asynchronous; use [Get batch verification task](/api-reference/endpoints/batch-verification/get-task) to monitor progress.
+- Download results with [Download batch verification results](/api-reference/endpoints/batch-verification/download-results).
+- Consider webhooks for large lists to avoid polling.
+
+<Tip>
+  If your list is large, use a webhook so your pipeline updates automatically when the task finishes.
+</Tip>
+
+## Success Metrics
+- Reduced bounce rate and spam complaints.
+- Higher delivery and inbox placement.
+- Cleaner CRM segments for future outreach.
+
+## Related Integrations
+- [Create batch verification task](/api-reference/endpoints/batch-verification/create-task)
+- [Webhooks](/api-reference/webhooks)
+- [Google Sheets](/integrations/google-sheets)
+- [Zapier](/integrations/zapier)
+- [n8n](/integrations/n8n)
+- [Make](/integrations/make)

@@ -1,0 +1,78 @@
+---
+title: "Realtime Signup Verification"
+description: "Verify emails at signup or lead capture using realtime checks and clear accept/hold/reject rules."
+---
+
+## Use Case Summary
+Use realtime email verification when a user submits a signup or lead form. This blocks invalid or disposable addresses early, reduces bounce rate, and keeps activation funnels clean.
+
+## Where Verification Fits
+Workflow at a glance:
+<CardGroup cols={2}>
+  <Card title="Capture">
+    Collect the email at signup or lead form submission.
+  </Card>
+  <Card title="Verify">
+    Run realtime verification for the address.
+  </Card>
+  <Card title="Decide">
+    Accept, hold, or reject based on verification signals.
+  </Card>
+  <Card title="Store">
+    Save results on the user record for future sends.
+  </Card>
+</CardGroup>
+
+## Recommended Flow
+1. Capture the email address on form submit.
+2. Call realtime verification for that email.
+3. Apply decision rules based on `status`, `is_disposable`, and `is_role_based`.
+4. Store the verification signals with the user record.
+
+## Minimal API Example
+```bash
+curl -X POST \
+  'https://api.boltroute.ai/api/v1/verify' \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"user@example.com"}'
+```
+
+```json
+{
+  "email": "user@example.com",
+  "status": "exists",
+  "is_role_based": false,
+  "is_disposable": false,
+  "is_catchall": false,
+  "unknown_reason": null
+}
+```
+
+## Decision Rules
+Common policies for signup flows:
+- Accept when `status` is `exists` and `is_disposable` is `false`.
+- Reject when `status` is `invalid_syntax` or `not_exists`.
+- Hold for review or require double opt-in when `status` is `catchall` or `unknown`.
+- Optionally flag `is_role_based` addresses for extra review.
+
+## Operational Notes
+- Authorization is required for all API requests.
+- Treat `408 Request Timeout` as an uncertain result and retry or queue a follow-up check.
+- Respect `429` rate limits with exponential backoff.
+
+<Info>
+  If the user is waiting on-page, retry once on transient failures, then treat the result as `unknown`.
+</Info>
+
+## Success Metrics
+- Lower bounce rate for welcome or activation emails.
+- Reduced fake or disposable signups.
+- Higher conversion from verified leads to active users.
+
+## Related Integrations
+- [Realtime verification](/api-reference/endpoints/realtime-verification)
+- [Authorization](/api-reference/authorization)
+- [Zapier](/integrations/zapier)
+- [n8n](/integrations/n8n)
+- [Google Sheets](/integrations/google-sheets)
+- [Make](/integrations/make)
