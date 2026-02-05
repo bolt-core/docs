@@ -16,7 +16,7 @@ Workflow at a glance:
     Run scheduled batch tasks on the segment.
   </Card>
   <Card title="3. Compare">
-    Track shifts in `exists`, `unknown`, and `catchall`.
+    Track shifts in `valid`, `unknown`, and `catchall`.
   </Card>
   <Card title="4. Suppress">
     Update suppression lists before reactivation.
@@ -47,13 +47,13 @@ curl -X POST \
 
 ## Decision Rules
 Common hygiene rules:
-- Suppress `invalid_syntax` and `not_exists` immediately.
+- Suppress `invalid_syntax` and `invalid` immediately.
 - Review `catchall` and `unknown` before reactivation.
 - Suppress `is_disposable` for reputation-sensitive campaigns.
 
 ## Operational Notes
 - Space re-verification runs to avoid unnecessary credit usage.
-- Track list decay by monitoring changes in `exists` versus `unknown` counts.
+- Track list decay by monitoring changes in `valid` versus `unknown` counts.
 - Use [Download batch verification results](/api-reference/endpoints/batch-verification/download-results) to keep an audit trail.
 
 <Tip>

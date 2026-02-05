@@ -46,7 +46,7 @@ Example webhook payload:
   "data": {
     "job": {
       "email_address": "user@example.com",
-      "email": { "status": "exists" }
+      "email": { "status": "valid" }
     }
   }
 }
@@ -54,9 +54,9 @@ Example webhook payload:
 
 ## Decision Rules
 Common webhook routing rules:
-- Reject or suppress when `status` is `invalid_syntax` or `not_exists`.
+- Reject or suppress when `status` is `invalid_syntax` or `invalid`.
 - Hold for review when `status` is `catchall` or `unknown`.
-- Accept or advance a lead when `status` is `exists`.
+- Accept or advance a lead when `status` is `valid`.
 
 ## Operational Notes
 - Webhook URLs must be HTTPS and respond with a `2xx` status.

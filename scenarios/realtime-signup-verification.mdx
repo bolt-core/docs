@@ -40,7 +40,7 @@ curl -X POST \
 ```json
 {
   "email": "user@example.com",
-  "status": "exists",
+  "status": "valid",
   "is_role_based": false,
   "is_disposable": false,
   "is_catchall": false,
@@ -50,8 +50,8 @@ curl -X POST \
 
 ## Decision Rules
 Common policies for signup flows:
-- Accept when `status` is `exists` and `is_disposable` is `false`.
-- Reject when `status` is `invalid_syntax` or `not_exists`.
+- Accept when `status` is `valid` and `is_disposable` is `false`.
+- Reject when `status` is `invalid_syntax` or `invalid`.
 - Hold for review or require double opt-in when `status` is `catchall` or `unknown`.
 - Optionally flag `is_role_based` addresses for extra review.
 

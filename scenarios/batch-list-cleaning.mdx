@@ -48,8 +48,8 @@ curl -X POST \
 
 ## Decision Rules
 Common batch segmentation rules:
-- Keep `exists` addresses for campaigns.
-- Suppress `invalid_syntax` and `not_exists`.
+- Keep `valid` addresses for campaigns.
+- Suppress `invalid_syntax` and `invalid`.
 - Review `catchall` and `unknown` before sending.
 - Suppress `is_disposable` for most lifecycle or paid campaigns.
 
