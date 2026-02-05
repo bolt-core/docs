@@ -9,20 +9,7 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "icon": "book-open-cover",
-          "href": "https://docs.boltroute.ai"
-        },
-        {
-          "anchor": "Blog",
-          "icon": "newspaper",
-          "href": "https://boltroute.ai/blog"
-        }
-      ]
-    },
+    "global": {},
     "tabs": [
       {
         "tab": "Guides",

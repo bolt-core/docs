@@ -1,68 +1,136 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Verify your first email in minutes via API or file upload."
 ---
 
-## Get started in three steps
+## What you'll do
+Verify a single email in real time or process a batch list and download results.
 
-Get your documentation site running locally and make your first customization.
+## Before you begin
+- Create an API key: [Authorization](/api-reference/authorization)
+- Plan for batch size: up to 10,000 emails per job
+- File uploads support `.txt`, `.csv`, `.xlsx`
 
-### Step 1: Set up your local environment
+<Note>
+  All API requests require authorization headers. Use `Authorization: Bearer <api_key>` (recommended) or `X-API-Key: <api_key>`.
+</Note>
+
+## Choose your path
+
+<CardGroup cols={2}>
+  <Card title="API developers" icon="bolt" href="#api-developers">
+    Verify a single address, then create a batch job via API.
+  </Card>
+  <Card title="File upload (ops)" icon="file-arrow-up" href="#file-upload-ops">
+    Upload a list and download results with minimal setup.
+  </Card>
+</CardGroup>
+
+## API developers
 
 <AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
+  <Accordion title="Step 1: Set your API key" icon="key">
+
+```bash
+export BOLTROUTE_API_KEY="your_api_key_here"
+```
+
   </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
+  <Accordion title="Step 2: Verify one email" icon="bolt">
+
+```bash
+curl -X POST \
+  'https://api.boltroute.ai/api/v1/verify' \
+  -H "Authorization: Bearer $BOLTROUTE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"user@example.com"}'
+```
+
+  </Accordion>
+  <Accordion title="Step 3: Create a batch job" icon="list-check">
+
+```bash
+curl -X POST \
+  'https://api.boltroute.ai/api/v1/tasks' \
+  -H "Authorization: Bearer $BOLTROUTE_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "emails": ["user1@example.com", "user2@example.com"],
+    "webhook_url": "https://example.com/webhook"
+  }'
+```
+
   </Accordion>
 </AccordionGroup>
 
-### Step 2: Deploy your changes
+<Tip>
+  Track status and download results with [Get batch verification task](/api-reference/endpoints/batch-verification/get-task) and [Download batch verification results](/api-reference/endpoints/batch-verification/download-results). For completion callbacks, see [Webhooks](/api-reference/webhooks).
+</Tip>
+
+## File upload (ops)
 
 <AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+  <Accordion title="Step 1: Upload your list" icon="file-arrow-up">
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+```bash
+curl -X POST \
+  'https://api.boltroute.ai/api/v1/tasks/batch/upload' \
+  -H "Authorization: Bearer $BOLTROUTE_API_KEY" \
+  -F 'file=@emails.csv' \
+  -F 'email_column=email'
+```
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
+<Note>
+  `email_column` is optional and not supported for `.txt` uploads. Maximum 10,000 emails per file.
+</Note>
+
+  </Accordion>
+  <Accordion title="Step 2: Check upload status" icon="activity">
+
+```bash
+curl -X GET \
+  'https://api.boltroute.ai/api/v1/tasks/batch/uploads/<upload_id>' \
+  -H "Authorization: Bearer $BOLTROUTE_API_KEY"
+```
+
+  </Accordion>
+  <Accordion title="Step 3: Download results" icon="download">
+
+```bash
+curl -L \
+  'https://api.boltroute.ai/api/v1/tasks/<task_id>/download?format=csv' \
+  -H "Authorization: Bearer $BOLTROUTE_API_KEY" \
+  -o batch-verification-results.csv
+```
+
   </Accordion>
 </AccordionGroup>
 
-### Step 3: Go live
+<Tip>
+  You can download results as `csv`, `txt`, or `xlsx`. See [Download batch verification results](/api-reference/endpoints/batch-verification/download-results).
+</Tip>
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+## Compatibility
+
+<CardGroup cols={3}>
+  <Card title="Context7" icon="book-open-cover" href="/guides/context7-compatibility">
+    Docs are already indexed and ready to use in Context7.
+  </Card>
+  <Card title="DeepWiki" icon="book-open-cover" href="/guides/deepwiki-compatibility">
+    Use the pre-indexed `bolt-core/docs` source in DeepWiki.
+  </Card>
+  <Card title="LLMs.txt" icon="file-text" href="/guides/llms-txt">
+    LLM tools can discover the docs via the official `llms.txt`.
+  </Card>
+</CardGroup>
 
 ## Next steps
 
-Now that you have your docs running, explore this key feature:
-
 <CardGroup cols={2}>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="API reference" icon="code" href="/api-reference/introduction">
+    Explore all endpoints and schemas.
+  </Card>
+  <Card title="Integrations" icon="plug" href="/integrations/zapier">
+    Connect Bolt Route to your existing workflows.
+  </Card>
 </CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
