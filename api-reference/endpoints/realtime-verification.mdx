@@ -32,7 +32,7 @@ Example response:
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "email": "user@example.com",
-  "status": "exists",
+  "status": "valid",
   "is_role_based": false,
   "is_disposable": false,
   "has_mx_records": true,
@@ -50,8 +50,8 @@ Example response:
 Response fields:
 - `id`: UUID of the stored verification record when available.
 - `email`: the verified email address.
-- `status`: overall verification result. Values: `exists`, `not_exists`, `catchall`, `invalid_syntax`, `unknown`.
-- `is_role_based`: true if the local part is a role account (e.g., admin@).
+- `status`: overall verification result. Values: `valid`, `invalid`, `catchall`, `invalid_syntax`, `disposable_domain`, `unknown`.
+- `is_role_based`: true if the local part is a role account (e.g., support@).
 - `is_disposable`: true if domain is known disposable.
 - `has_mx_records`: true if the domain has MX records.
 - `has_reverse_dns`: true if reverse DNS records exist for the mail host.
@@ -63,9 +63,14 @@ Response fields:
 - `unknown_reason`: reason when `status` is `unknown`.
 - `needs_physical_verify`: true when inbox check requires manual/physical verification.
 
+Notes:
+- **Credits:** deducts 1 credit per verification when the resulting status is **not** `unknown` (including cached results).
+- `unknown` results are free.
+
 Errors:
 - `400` invalid body or email syntax.
 - `401` unauthorized (missing/invalid auth).
+- `402` insufficient credit balance.
 - `408` verification timed out.
 - `429` rate limited.
 - `500` internal error.

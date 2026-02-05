@@ -16,7 +16,6 @@ Query parameters:
 
 - `limit` (int, default 10, max 100)
 - `offset` (int, default 0)
-- `user_id` (UUID, admin only)
 - `is_file_backed` (bool, optional, `true` or `false`)
 - `created_after` (RFC3339 timestamp)
 - `created_before` (RFC3339 timestamp)
@@ -65,10 +64,11 @@ Example response:
         "progress": 1,
         "progress_percent": 100,
         "verification_status": {
-          "exists": 2,
-          "not_exists": 0,
+          "valid": 2,
+          "invalid": 0,
           "catchall": 0,
           "invalid_syntax": 0,
+          "disposable_domain": 0,
           "unknown": 0,
           "role_based": 0,
           "disposable_domain_emails": 0

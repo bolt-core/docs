@@ -61,9 +61,14 @@ Response fields:
 - `email_count`: total emails submitted.
 - `domain_count`: number of unique domains queued.
 
+Notes:
+- Credits are reserved at task creation for the full email count.
+- Final charge equals the count of emails with a non-`unknown` status; `unknown` results are refunded once the task finishes.
+
 Errors:
 
 - `400` invalid payload (invalid emails, webhook URL, or >10,000 emails).
+- `402` insufficient credit balance.
 - `401` unauthorized.
 - `429` rate limited.
 - `500` internal error.

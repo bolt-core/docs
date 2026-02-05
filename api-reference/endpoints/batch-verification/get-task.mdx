@@ -10,8 +10,6 @@ Fetch a single batch verification task with its current status and aggregated me
 
 Purpose: retrieve a single batch verification task with aggregated metrics.
 
-Access: Non-admins can only access their own batch verification tasks.
-
 Path parameter:
 
 - `id` (UUID, required)
@@ -60,10 +58,11 @@ Example response:
     "progress": 1,
     "progress_percent": 100,
     "verification_status": {
-      "exists": 2,
-      "not_exists": 0,
+      "valid": 2,
+      "invalid": 0,
       "catchall": 0,
       "invalid_syntax": 0,
+      "disposable_domain": 0,
       "unknown": 0,
       "role_based": 0,
       "disposable_domain_emails": 0
@@ -78,7 +77,6 @@ Errors:
 
 - `400` invalid ID.
 - `401` unauthorized.
-- `403` forbidden (non-admin accessing another user).
 - `404` batch verification task not found.
 - `429` rate limited.
 - `500` internal error.

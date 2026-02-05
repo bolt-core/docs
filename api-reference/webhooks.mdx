@@ -72,7 +72,7 @@ Sent once per email address. `data` contains the task context and a `job` object
       "updated_at": "2025-01-01T12:01:12Z",
       "email": {
         "id": "550e8400-e29b-41d4-a716-446655440222",
-        "status": "exists",
+        "status": "valid",
         "address": "user@example.com",
         "local": "user",
         "domain": "example.com",
@@ -123,7 +123,7 @@ Sent once when all jobs for a task finish. `data` contains aggregated stats and 
         "updated_at": "2025-01-01T12:01:12Z",
         "email": {
           "id": "550e8400-e29b-41d4-a716-446655440222",
-          "status": "exists",
+          "status": "valid",
           "address": "user@example.com",
           "local": "user",
           "domain": "example.com",
@@ -135,15 +135,15 @@ Sent once when all jobs for a task finish. `data` contains aggregated stats and 
         }
       },
       {
-        "email_address": "admin@example.com",
+        "email_address": "ops@example.com",
         "status": "completed",
         "created_at": "2025-01-01T12:00:10Z",
         "updated_at": "2025-01-01T12:01:30Z",
         "email": {
           "id": "550e8400-e29b-41d4-a716-446655440223",
-          "status": "exists",
-          "address": "admin@example.com",
-          "local": "admin",
+          "status": "valid",
+          "address": "ops@example.com",
+          "local": "ops",
           "domain": "example.com",
           "verification_steps": [
             { "step": "syntax", "status": "completed" },

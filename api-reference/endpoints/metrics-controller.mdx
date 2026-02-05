@@ -6,11 +6,12 @@ description: "Reference documentation for metrics."
 ## Overview
 Retrieve verification metrics with optional date filtering to summarize volume, status breakdowns, and recent activity.
 
+Auth: API key required.
+
 ## GET /api/v1/metrics/verifications
 Purpose: return verification metrics for a user.
 
 Query parameters:
-- `user_id` (UUID, admin only)
 - `from` (RFC3339, optional): filter metrics from this date
 - `to` (RFC3339, optional): filter metrics up to this date
 
@@ -40,11 +41,12 @@ Example response:
     "failed": 34
   },
   "verification_status": {
-    "exists": 900,
-    "not_exists": 200,
+    "valid": 900,
+    "invalid": 200,
     "catchall": 50,
     "invalid_syntax": 20,
-    "unknown": 64
+    "disposable_domain": 5,
+    "unknown": 59
   },
   "total_catchall": 50,
   "total_role_based": 42,
@@ -58,7 +60,7 @@ Example response:
       "total_tasks": 2,
       "unique_email_addresses": 195,
       "job_status": { "pending": 0, "processing": 0, "completed": 200, "failed": 0 },
-      "verification_status": { "exists": 150, "not_exists": 30, "catchall": 10, "invalid_syntax": 5, "unknown": 5 },
+      "verification_status": { "valid": 150, "invalid": 30, "catchall": 10, "invalid_syntax": 5, "disposable_domain": 1, "unknown": 4 },
       "total_catchall": 10,
       "total_role_based": 5,
       "total_disposable_domain_emails": 1
@@ -68,6 +70,6 @@ Example response:
 ```
 
 Errors:
-- `400` invalid `user_id` or date params, or missing `user_id` for admin requests without an authenticated user.
+- `400` invalid date params.
 - `401` unauthorized.
 - `500` internal error.

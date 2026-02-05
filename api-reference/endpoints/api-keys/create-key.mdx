@@ -6,7 +6,6 @@ description: "Create a new API key."
 ## Overview
 Create a new API key for integrations; the plaintext key is returned once in the response.
 
-
 ## POST /api/v1/api-keys
 Purpose: create a new API key. The plaintext key is returned only once.
 
@@ -41,9 +40,9 @@ Example response:
 ```
 
 Response fields:
-- `key`: plaintext key (store securely; it will not be returned again).
+- `key`: plaintext key (store securely; it can be retrieved later with `GET /api/v1/api-keys?reveal=true`).
 
 Errors:
 - `400` invalid request.
 - `401` unauthorized.
-- `500` internal error.
+- `500` internal error (including missing `ENCRYPTION_KEY`).

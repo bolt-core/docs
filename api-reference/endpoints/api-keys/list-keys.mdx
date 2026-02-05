@@ -6,13 +6,17 @@ description: "List active API keys."
 ## Overview
 List active API keys for the authenticated user, with optional filtering by last-used timestamps.
 
-
 ## GET /api/v1/api-keys
 Purpose: list active API keys for the authenticated user.
 
 Query parameters:
 - `from` (RFC3339 timestamp, optional): filter by `last_used_at` >= from
 - `to` (RFC3339 timestamp, optional): filter by `last_used_at` less than or equal to `to`
+- `reveal` (boolean, optional): include plaintext keys in the response (requires `ENCRYPTION_KEY`)
+
+Notes:
+- When `reveal=true`, each key includes a plaintext `key` field.
+- Keys are masked by default using `key_preview`.
 
 Example request:
 ```bash
@@ -29,6 +33,7 @@ Example response:
   "keys": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
+      "key_preview": "a1b2c3...9f0e",
       "name": "My Production Key",
       "purpose": "zapier",
       "last_used_at": "2025-01-01T12:00:00Z",
@@ -41,7 +46,11 @@ Example response:
 }
 ```
 
+Response fields:
+- `keys[].key_preview`: masked key (present when `reveal=false`).
+- `keys[].key`: plaintext key (present only when `reveal=true`).
+
 Errors:
 - `400` invalid query parameters.
 - `401` unauthorized.
-- `500` internal error.
+- `500` internal error (including when `reveal=true` and `ENCRYPTION_KEY` is missing).
