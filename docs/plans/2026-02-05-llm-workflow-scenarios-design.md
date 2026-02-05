@@ -25,7 +25,7 @@ Add a new subgroup under the existing Integrations navigation:
   - Webhook Automation
   - Ongoing List Hygiene
 
-New folder: `integrations/scenarios/`.
+New folder: `scenarios/`.
 
 ## Page Template
 Each page should follow the same H2 order:

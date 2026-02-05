@@ -41,10 +41,10 @@
           {
             "group": "Scenarios",
             "pages": [
-              "integrations/scenarios/realtime-signup-verification",
-              "integrations/scenarios/batch-list-cleaning",
-              "integrations/scenarios/webhook-automation",
-              "integrations/scenarios/ongoing-list-hygiene"
+              "scenarios/realtime-signup-verification",
+              "scenarios/batch-list-cleaning",
+              "scenarios/webhook-automation",
+              "scenarios/ongoing-list-hygiene"
             ]
           }
         ]
