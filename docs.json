@@ -144,7 +144,7 @@
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.boltroute.ai"
+      "href": "https://app.boltroute.ai"
     }
   },
   "contextual": {
