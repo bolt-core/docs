@@ -29,7 +29,7 @@ New folder: `scenarios/`.
 
 ## Page Template
 Each page should follow the same H2 order:
-1. Use Case Summary
+1. Use Case
 2. Where Verification Fits
 3. Recommended Flow
 4. Minimal API Example
