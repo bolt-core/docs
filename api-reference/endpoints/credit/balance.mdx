@@ -13,7 +13,20 @@ description: "Retrieve the current user credit balance."
 - **Content-Type:** `application/json`
 - **Date/Time:** ISO 8601 (UTC)
 - **Pagination:** `limit`, `offset`
-- **Error format:** See "Error Responses (Global)" in `docs/api/endpoint-template.md`
+- **Error format:** JSON error payload with `code`, `message`, and optional `details`
+
+Example error payload:
+```json
+{
+  "error": {
+    "code": "STRING_CODE",
+    "message": "Human readable message",
+    "details": [
+      { "field": "fieldA", "reason": "required" }
+    ]
+  }
+}
+```
 
 ---
 
@@ -33,7 +46,6 @@ description: "Retrieve the current user credit balance."
 **Query Params**
 | Name | Type | Required | Default | Description | Example |
 |------|------|----------|---------|-------------|---------|
-| user_id | string (uuid) | No | - | Target user ID (admins only) | `550e8400-e29b-41d4-a716-446655440000` |
 
 ### Responses
 
@@ -90,9 +102,6 @@ description: "Retrieve the current user credit balance."
   }
 }
 ```
-
-### Notes
-- Admin tokens that do not map to a user UUID must supply `user_id`.
 
 ### Examples
 **cURL**

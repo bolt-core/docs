@@ -60,4 +60,4 @@ Every request requires your API key. Send it with the `Authorization: Bearer <ap
 
 ## Understanding results
 
-You get an overall `status` plus supporting signals (for example `is_disposable`, `is_role_based`, `is_catchall`, and DNS/SMTP checks). Treat `exists` as deliverable, `not_exists` as a hard fail, `invalid_syntax` as invalid input, and `unknown` or `catchall` as cases that need your business logic.
+You get an overall `status` plus supporting signals (for example `is_disposable`, `is_role_based`, `is_catchall`, and DNS/SMTP checks). Treat `valid` as deliverable, `invalid` as a hard fail, `invalid_syntax` as invalid input, `disposable_domain` as disposable, and `unknown` or `catchall` as cases that need your business logic.

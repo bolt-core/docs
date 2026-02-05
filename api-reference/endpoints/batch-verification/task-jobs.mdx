@@ -10,8 +10,6 @@ List the email jobs for a batch verification task, including per-email results w
 
 Purpose: get a paginated list of email jobs for a specific batch verification task, including nested verification results (when available).
 
-Access: Non-admins can only access their own batch verification tasks.
-
 Path parameter:
 
 - `id` (UUID, required)
@@ -50,7 +48,7 @@ Example response:
       "email": {
         "id": "550e8400-e29b-41d4-a716-446655440000",
         "email": "user1@example.com",
-        "status": "exists",
+        "status": "valid",
         "is_role_based": false,
         "is_disposable": false,
         "has_mx_records": true,

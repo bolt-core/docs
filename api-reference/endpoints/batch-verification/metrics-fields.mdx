@@ -12,6 +12,6 @@ Definitions for the fields used in batch verification metrics responses.
 - `job_status`: counts per job status (`pending`, `processing`, `completed`, `failed`).
 - `progress`: float ratio of completed/failed over total.
 - `progress_percent`: integer percent (0-100).
-- `verification_status`: counts by result (`exists`, `not_exists`, `catchall`, `invalid_syntax`, `unknown`) plus `role_based` and `disposable_domain_emails`.
+- `verification_status`: counts by result (`valid`, `invalid`, `catchall`, `invalid_syntax`, `disposable_domain`, `unknown`) plus `role_based` and `disposable_domain_emails`.
 - `last_verification_requested_at`: last time a verification was requested.
 - `last_verification_completed_at`: last time a verification completed.

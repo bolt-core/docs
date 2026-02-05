@@ -10,8 +10,6 @@ Return daily metrics series for a batch verification task over a selected date r
 
 Purpose: daily metrics series for a batch verification task between `from` and `to` dates (max 90 days).
 
-Access: Non-admins can only access their own batch verification tasks.
-
 Query parameters:
 
 - `from` (RFC3339, optional)
@@ -53,10 +51,11 @@ Example response:
       "progress": 1,
       "progress_percent": 100,
       "verification_status": {
-        "exists": 2,
-        "not_exists": 0,
+        "valid": 2,
+        "invalid": 0,
         "catchall": 0,
         "invalid_syntax": 0,
+        "disposable_domain": 0,
         "unknown": 0,
         "role_based": 0,
         "disposable_domain_emails": 0

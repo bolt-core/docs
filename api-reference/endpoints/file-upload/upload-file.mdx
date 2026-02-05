@@ -6,7 +6,6 @@ description: "Upload a file for batch verification."
 ## Overview
 Upload a file of email addresses to start a batch verification task. Processing runs asynchronously, and you can optionally provide a webhook for completion notifications.
 
-
 ## POST /api/v1/tasks/batch/upload
 Purpose: upload a file containing email addresses for batch verification. Processing happens asynchronously.
 
@@ -25,6 +24,7 @@ Notes:
 - `email_column` is not supported for `.txt` files.
 - `user_id` is not allowed in the form body.
 - Maximum of 10,000 emails per file.
+- Credits are reserved at task creation for the full email count; `unknown` results are refunded after the task completes (final charge equals non-`unknown` results).
 
 Example request:
 ```bash
@@ -63,4 +63,5 @@ Response fields:
 Errors:
 - `400` file missing, unsupported file format, invalid file, invalid webhook URL, invalid `email_column`, no valid emails, email limit exceeded, or validation failures.
 - `401` unauthorized.
+- `402` insufficient credit balance.
 - `500` internal error.

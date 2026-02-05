@@ -1,0 +1,55 @@
+---
+title: "API behavior"
+description: "Global request/response conventions, error format, and dependency behavior."
+---
+
+## Overview
+This page documents shared API behavior across endpoints, including request/response conventions, error format, pagination, idempotency, and dependency handling.
+
+## Conventions
+- **Content-Type:** `application/json`
+- **Time:** ISO 8601 (UTC)
+- **Request ID:** If you provide `X-Request-ID`, the API echoes it back. Otherwise, a request ID is generated.
+
+## Idempotency
+For safe retries on `POST` requests, send an `Idempotency-Key` header. When supported, the API will return the same response for duplicate requests with the same key.
+
+## Pagination
+Endpoints that return lists may support pagination via:
+- `page`, `limit`
+- `cursor`, `limit`
+
+Use the parameters listed on each endpoint for the supported pagination style.
+
+## Rate limiting
+When you exceed rate limits, the API returns `429` and includes a `Retry-After` header.
+
+## Error format
+Errors use a consistent JSON shape with a machine-friendly `code` and human-readable `message`.
+
+Example error payload:
+```json
+{
+  "error": {
+    "code": "STRING_CODE",
+    "message": "Human readable message",
+    "details": [
+      { "field": "fieldA", "reason": "required" }
+    ]
+  }
+}
+```
+
+## Third-party dependencies
+Some endpoints rely on downstream systems (SMTP, DNS, message queues, blocklists, or vendor APIs).
+
+Behavior:
+- **Timeouts:** downstream calls use fixed timeouts; slow responses may return partial or failed results.
+- **Retries:** transient failures are retried with backoff; final failures surface as `5xx` or `424`.
+- **Partial results:** if some checks succeed and others fail, the response includes per-check status.
+- **Async work:** when a dependency is slow, the API may return `202 Accepted` with a job ID.
+
+Typical dependency error codes:
+- `DEPENDENCY_TIMEOUT`
+- `DEPENDENCY_UNAVAILABLE`
+- `DEPENDENCY_RATE_LIMIT`
