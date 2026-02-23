@@ -12,6 +12,7 @@ Purpose: perform realtime verification of a single email address (syntax, domain
 ### Request
 Headers:
 - `Content-Type: application/json`
+- `X-Request-ID: <string>` (optional): request identifier for attribution/tracing.
 
 Body:
 - `email` (string, required): email address to verify.
@@ -64,8 +65,11 @@ Response fields:
 - `needs_physical_verify`: true when inbox check requires manual/physical verification.
 
 Notes:
-- **Credits:** deducts 1 credit per verification when the resulting status is **not** `unknown` (including cached results).
+- **Credits:** deducts 1 credit when the resulting status is **not** `unknown` and the request is not inside the same-user/same-email free-repeat window.
 - `unknown` results are free.
+- Same user + same canonical email (trimmed/lowercased) within 24 hours is free-repeat (no additional deduction), including cached responses.
+- Cached responses are billed only when outside the free-repeat window.
+- `X-Request-ID` is optional and used for attribution; charge idempotency is enforced by a server-generated deterministic key per user/email in 5-minute UTC windows.
 
 Errors:
 - `400` invalid body or email syntax.

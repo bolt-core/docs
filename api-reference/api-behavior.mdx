@@ -12,7 +12,9 @@ This page documents shared API behavior across endpoints, including request/resp
 - **Request ID:** If you provide `X-Request-ID`, the API echoes it back. Otherwise, a request ID is generated.
 
 ## Idempotency
-For safe retries on `POST` requests, send an `Idempotency-Key` header. When supported, the API will return the same response for duplicate requests with the same key.
+- **Realtime verify (`POST /api/v1/verify`):** charge idempotency is server-side. Billing uses a deterministic key per user/email in 5-minute UTC windows.
+- `X-Request-ID` on realtime verify is for attribution/tracing and does not override server-side charge deduplication.
+- Other endpoints may still define endpoint-specific idempotency behavior; follow each endpoint page.
 
 ## Pagination
 Endpoints that return lists may support pagination via:
