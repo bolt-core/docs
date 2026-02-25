@@ -1,0 +1,56 @@
+---
+title: "Credit usage series"
+description: "Retrieve daily used, granted, and net credit totals for a date range."
+---
+
+## Overview
+Return daily credit usage totals for the authenticated user.
+
+## GET /api/v1/credits/usage
+Purpose: return credit usage metrics for a user.
+
+Query parameters:
+- `from` (RFC3339 timestamp, required): start timestamp for the series window.
+- `to` (RFC3339 timestamp, required): end timestamp for the series window.
+- `user_id` (UUID, optional, admin only): target user ID.
+
+Notes:
+- `from` and `to` must be provided together.
+- The date range is capped at 90 days.
+- The query includes credit rows where `metadata.source = "api_key"` and legacy rows where source is missing.
+- The query excludes rows where `metadata.source = "frontend"`.
+- Non-admin users can only fetch their own usage; admins can scope with `user_id`.
+
+Example request:
+```bash
+curl -X GET \
+  'https://api.boltroute.ai/api/v1/credits/usage?from=2025-01-01T00:00:00Z&to=2025-01-03T00:00:00Z' \
+  -H 'Authorization: Bearer <api_key_or_jwt>'
+```
+
+### Response
+Status: `200 OK`
+
+Example response:
+```json
+{
+  "user_id": "550e8400-e29b-41d4-a716-446655440000",
+  "from": "2025-01-01T00:00:00Z",
+  "to": "2025-01-03T00:00:00Z",
+  "totals": {
+    "used_credits": 13,
+    "granted_credits": 5,
+    "net_credits": 8
+  },
+  "series": [
+    { "date": "2025-01-01", "used_credits": 10, "granted_credits": 0, "net_credits": 10 },
+    { "date": "2025-01-02", "used_credits": 0, "granted_credits": 5, "net_credits": -5 },
+    { "date": "2025-01-03", "used_credits": 3, "granted_credits": 0, "net_credits": 3 }
+  ]
+}
+```
+
+Errors:
+- `400` invalid date parameters, invalid `user_id`, or missing required range.
+- `401` unauthorized.
+- `500` internal error while computing usage.

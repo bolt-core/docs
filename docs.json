@@ -116,7 +116,9 @@
             "group": "Credit",
             "pages": [
               "api-reference/endpoints/credit/balance",
-              "api-reference/endpoints/credit/transactions"
+              "api-reference/endpoints/credit/transactions",
+              "api-reference/endpoints/credit/usage",
+              "api-reference/endpoints/credit/usage-by-api-keys"
             ]
           },
           {

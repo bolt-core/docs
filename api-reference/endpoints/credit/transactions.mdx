@@ -62,7 +62,11 @@ Example error payload:
       "amount": 100,
       "balance_after": 500,
       "reason": "Manual adjustment",
-      "metadata": { "source": "system" },
+      "metadata": {
+        "source": "api_key",
+        "api_key_id": "550e8400-e29b-41d4-a716-446655440000",
+        "api_key_purpose": "zapier"
+      },
       "created_at": "2023-01-01T12:00:00Z"
     }
   ],
@@ -83,6 +87,9 @@ Example error payload:
 | transactions[].balance_after | integer | Balance after the transaction |
 | transactions[].reason | string | Optional reason |
 | transactions[].metadata | object | Optional metadata |
+| transactions[].metadata.source | string | Credit source attribution (`api_key`, `frontend`, or missing on legacy rows) |
+| transactions[].metadata.api_key_id | string | API key UUID when the request was attributed to an API key |
+| transactions[].metadata.api_key_purpose | string | API key purpose when available (for example `zapier`) |
 | transactions[].created_at | string | ISO 8601 timestamp |
 | total | integer | Total number of transactions |
 | limit | integer | Page size |
