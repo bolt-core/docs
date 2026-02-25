@@ -1,5 +1,7 @@
 # Bolt Route Email Verification Docs
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/bolt-core/docs)
+
 Source for the public documentation at [docs.boltroute.ai](https://docs.boltroute.ai).
 
 Quick links:
