@@ -6,7 +6,7 @@ Source for the public documentation at [docs.boltroute.ai](https://docs.boltrout
 
 Quick links:
 - Docs: [docs.boltroute.ai](https://docs.boltroute.ai)
-- Dashboard: [dashboard.boltroute.ai](https://dashboard.boltroute.ai)
+- Dashboard: [dashboard.boltroute.ai](https://app.boltroute.ai)
 - Support: [support@boltroute.ai](mailto:support@boltroute.ai)
 
 **Quick start**
