@@ -12,19 +12,19 @@ Purpose: return credit usage metrics for a user.
 Query parameters:
 - `from` (RFC3339 timestamp, required): start timestamp for the series window.
 - `to` (RFC3339 timestamp, required): end timestamp for the series window.
-- `user_id` (UUID, optional, admin only): target user ID.
+- `source` (string, optional): source filter. Supported values: `all` (default), `frontend`, `api_key`.
 
 Notes:
 - `from` and `to` must be provided together.
 - The date range is capped at 90 days.
-- The query includes credit rows where `metadata.source = "api_key"` and legacy rows where source is missing.
-- The query excludes rows where `metadata.source = "frontend"`.
-- Non-admin users can only fetch their own usage; admins can scope with `user_id`.
+- `source=all` (default) includes all credit transaction sources.
+- `source=frontend` includes only rows where `metadata.source = "frontend"`.
+- `source=api_key` includes only rows where `metadata.source = "api_key"`.
 
 Example request:
 ```bash
 curl -X GET \
-  'https://api.boltroute.ai/api/v1/credits/usage?from=2025-01-01T00:00:00Z&to=2025-01-03T00:00:00Z' \
+  'https://api.boltroute.ai/api/v1/credits/usage?from=2025-01-01T00:00:00Z&to=2025-01-03T00:00:00Z&source=all' \
   -H 'Authorization: Bearer <api_key_or_jwt>'
 ```
 
@@ -38,19 +38,19 @@ Example response:
   "from": "2025-01-01T00:00:00Z",
   "to": "2025-01-03T00:00:00Z",
   "totals": {
-    "used_credits": 13,
+    "used_credits": 17,
     "granted_credits": 5,
-    "net_credits": 8
+    "net_credits": 12
   },
   "series": [
     { "date": "2025-01-01", "used_credits": 10, "granted_credits": 0, "net_credits": 10 },
-    { "date": "2025-01-02", "used_credits": 0, "granted_credits": 5, "net_credits": -5 },
+    { "date": "2025-01-02", "used_credits": 4, "granted_credits": 5, "net_credits": -1 },
     { "date": "2025-01-03", "used_credits": 3, "granted_credits": 0, "net_credits": 3 }
   ]
 }
 ```
 
 Errors:
-- `400` invalid date parameters, invalid `user_id`, or missing required range.
+- `400` invalid date parameters, invalid `source`, or missing required range.
 - `401` unauthorized.
 - `500` internal error while computing usage.

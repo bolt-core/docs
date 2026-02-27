@@ -12,7 +12,7 @@ Purpose: return credit usage metrics grouped by API key.
 Query parameters:
 - `from` (RFC3339 timestamp, required): start timestamp for the series window.
 - `to` (RFC3339 timestamp, required): end timestamp for the series window.
-- `user_id` (UUID, optional, admin only): target user ID.
+- `api_key_id` (UUID, optional): filter to a single API key.
 
 Notes:
 - `from` and `to` must be provided together.
@@ -21,6 +21,7 @@ Notes:
 - The query excludes rows where `metadata.source = "frontend"`.
 - Records with missing or invalid `metadata.api_key_id` are grouped into an `is_unknown = true` bucket.
 - When an API key still exists, `api_key_name`, `api_key_purpose`, and `is_active` are populated from `api_keys`.
+- `api_key_id` returns only the matching API key bucket.
 
 Example request:
 ```bash
@@ -66,6 +67,6 @@ Example response:
 ```
 
 Errors:
-- `400` invalid date parameters, invalid `user_id`, or missing required range.
+- `400` invalid date parameters, invalid `api_key_id`, or missing required range.
 - `401` unauthorized.
 - `500` internal error while computing usage.
