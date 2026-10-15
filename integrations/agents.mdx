@@ -70,7 +70,13 @@ For a token, merge this server entry into your chosen `.mcp.json` and set the en
 }
 ```
 
-A direct `claude mcp add --transport http ... --header "Authorization: Bearer ${BOLTROUTE_API_KEY}"` command stores the resolved credential in local client configuration. Keep that configuration private. These instructions cover Claude Code.
+To add the same token configuration from a shell, keep the header single-quoted:
+
+```sh
+claude mcp add --transport http boltroute-verification https://api.boltroute.ai/mcp --header 'Authorization: Bearer ${BOLTROUTE_API_KEY}'
+```
+
+The quotes preserve the variable reference in configuration; Claude Code expands it from your local environment when connecting. Do not replace the reference with a resolved token or use double quotes that let the shell expand it first. These instructions cover Claude Code.
 
 ## Supported work
 
