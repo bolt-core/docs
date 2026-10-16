@@ -1,0 +1,125 @@
+---
+title: "Codex and Claude Code"
+description: "Connect an agent to your Email Verification account with MCP."
+---
+
+After the customer MCP integration is released, use its endpoint to start verification tasks, follow progress, retrieve results and inspect API credits from your agent:
+
+```text
+https://api.boltroute.ai/mcp
+```
+
+## Connect your account
+
+Create or access your current customer account from the [sign-up page](https://app.boltroute.ai/agents?mode=signup). Choose Google or email and password. Email/password accounts must verify the email address before signing in.
+
+If you used the previous sign-in system, create a fresh account. It has a new account ID; previous sessions, passwords, password-reset links, task history and API credits are not imported, even when you use the same email address. Check the current account's credit balance before starting paid work.
+
+Self-service credit purchases for accounts created through Agents are not yet available. Check the current API balance and contact support to confirm credit availability before paid work. Checkout from the previous sign-in system does not fund this account.
+
+Open **Agents** in the [customer console](https://app.boltroute.ai/agents). Browser authorization asks you to sign in and approve the requested permissions. Confirm your account email first; restart authorization if its request expires.
+
+Choose only the permissions your agent needs:
+
+| Permission | Access |
+| --- | --- |
+| `verification:read` | Your task history, progress, results and authenticated exports |
+| `verification:write` | Start verification work using your API credits |
+| `credits:read` | Your API credit balance and usage |
+
+The console also creates named, expiring tokens. New tokens are shown once. Keep them in a local secret store or environment variable, never in chat prompts, screenshots or shared files. Agent tokens have only their selected scopes and can be revoked from **Agents**.
+
+## Codex
+
+For browser authorization:
+
+```sh
+codex mcp add boltroute-verification --url https://api.boltroute.ai/mcp
+codex mcp login boltroute-verification
+```
+
+For a token, set `BOLTROUTE_API_KEY` locally and add the connection without putting its value in configuration:
+
+```sh
+codex mcp add boltroute-verification --url https://api.boltroute.ai/mcp --bearer-token-env-var BOLTROUTE_API_KEY
+```
+
+Use `/mcp` to inspect the connection in Codex.
+
+## Claude Code
+
+For browser authorization:
+
+```sh
+claude mcp add --transport http boltroute-verification https://api.boltroute.ai/mcp
+```
+
+Run `/mcp` and follow the authentication prompt. Review the client callback and permissions before allowing access.
+
+For a token, merge this server entry into your chosen `.mcp.json` and set the environment variable locally:
+
+```json
+{
+  "mcpServers": {
+    "boltroute-verification": {
+      "type": "http",
+      "url": "https://api.boltroute.ai/mcp",
+      "headers": { "Authorization": "Bearer ${BOLTROUTE_API_KEY}" }
+    }
+  }
+}
+```
+
+To add the same token configuration from a shell, keep the header single-quoted:
+
+```sh
+claude mcp add --transport http boltroute-verification https://api.boltroute.ai/mcp --header 'Authorization: Bearer ${BOLTROUTE_API_KEY}'
+```
+
+The quotes preserve the variable reference in configuration; Claude Code expands it from your local environment when connecting. Do not replace the reference with a resolved token or use double quotes that let the shell expand it first. These instructions cover Claude Code.
+
+## Supported work
+
+| Tool | Purpose |
+| --- | --- |
+| `verify_email` | Submit one authorized address and obtain a stable task ID |
+| `create_verification_task` | Submit up to 10,000 authorized addresses |
+| `list_verification_tasks` | Browse your verification history with pagination |
+| `get_verification_task` | Inspect progress, status and result counts |
+| `get_verification_results` | Retrieve up to 100 results per page, including observed domain checks |
+| `get_verification_export` | Obtain an authenticated download link for your task |
+| `get_credit_balance` | Read your current API credit balance |
+| `get_credit_usage` | Read your API credit usage over a supported date range |
+
+Single and bulk submissions use the normal verification pipeline and credit rules. Provide `workload_authorized: true` only for addresses you are authorized to process. Start with a credit-balance read when planning paid work.
+
+Both submission tools require a stable `request_id`. Retrying the same intended submission must retain the same ID and payload. A different ID creates a new operation. If a response is interrupted or publishing is uncertain, retain the returned task/operation ID and resume or poll; do not automatically submit the addresses again with a new ID. A different payload under an existing ID returns a conflict.
+
+Tasks complete asynchronously. Poll at a bounded interval; if a transient API error includes `retry_after_seconds`, wait at least that long. Use bounded result pages; a first page is not the whole dataset. Export URLs contain no credential and require your Authorization header when downloaded. Keep exports containing recipient data private.
+
+Results preserve `valid`, `invalid`, `catchall`, `invalid_syntax`, `disposable_domain`, `typo_domain` and `unknown`, along with public reasons and job state. Catch-all, unknown, provider errors and timeouts are not deliverability guarantees. A domain field marked `not_checked` does not indicate a completed check. Cancellation, forced retries, global domain/email searches and operator controls are not customer tools.
+
+Try:
+
+- “Show my API credit balance and recent verification tasks.”
+- “Verify this authorized list, then report unknown and catch-all results separately.”
+- “Resume task `<task-id>` and get the next 100 results.”
+- “Get an authenticated CSV export for my task.”
+
+## Disconnect and troubleshoot
+
+In **Agents**, inspect each grant's permissions and expiry, then select **Revoke** to disconnect it. Revocation invalidates the connection's access and refresh credentials. Removing a local client configuration alone does not revoke server access. Already accepted verification work retains its normal lifecycle.
+
+For an expired/revoked token, create a new scoped connection or repeat browser authorization. For missing permission, grant only the additional scope needed. For insufficient credits, check the API balance; if it differs from the balance you expect, contact support before submitting again. For rate limits or temporarily unavailable verification capacity, wait for the supplied retry timing. Preserve request IDs on retries.
+
+The endpoint and browser connection flow are available only after the customer MCP integration release. If the endpoint is unavailable, check the release status. Do not copy browser cookies, request operator credentials or use a developer's token. Share only safe request/task IDs with support.
+
+## Optional customer skill
+
+Download the [portable customer package](/downloads/boltroute-agent.zip). It contains the `boltroute-verification` skill plus credential-free Codex/Claude configuration. From the extracted package folder, copy the skill into `.agents/skills/` for a Codex project or `.claude/skills/` for Claude Code. Installing the skill supplies workflow guidance; the MCP connection above supplies the actual tools.
+
+Connection formats follow [official Codex documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) and [official Claude Code documentation](https://code.claude.com/docs/en/mcp). Skill locations follow [Codex skills](https://learn.chatgpt.com/docs/build-skills) and [Claude Code skills](https://code.claude.com/docs/en/skills).
+
+## Agent HTTP contract
+
+The [agent access OpenAPI contract](/api-reference/customer-agent-openapi.json) describes connection management, OAuth discovery/consent/token lifecycle and the MCP transport. Tool input and output schemas are available from `tools/list` after authentication. These endpoints become available with the customer integration release.

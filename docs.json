@@ -32,6 +32,7 @@
           {
             "group": "Integrations",
             "pages": [
+              "integrations/agents",
               "integrations/zapier",
               "integrations/n8n",
               "integrations/google-sheets",
@@ -152,15 +153,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {

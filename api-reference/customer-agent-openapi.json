@@ -1,0 +1,1547 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "BoltRoute customer MCP and agent access",
+    "version": "1.0.0",
+    "description": "Companion to the existing customer REST API. These routes are enabled by default in the owning customer API; an explicit off switch disables them. The existing Better Auth trust settings and application migrations are required. ConsoleSession is the verified native customer account API JWT; customer API keys cannot mint connections or approve browser consent. OAuth requires exact redirect matching, PKCE S256, state and resource binding. Secrets are returned only by issuance/token endpoints with Cache-Control: no-store."
+  },
+  "servers": [
+    {
+      "url": "https://api.boltroute.ai"
+    }
+  ],
+  "paths": {
+    "/api/v1/agent-connections": {
+      "get": {
+        "summary": "List the signed-in customer\u2019s agent grants and endpoint",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ConsoleSession": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Issue a scoped connection token shown only once",
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssuedConnection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Account connection limit reached or authorization already consumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ConsoleSession": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateConnection"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agent-connections/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Revoke the customer-owned connection and all linked credentials",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "revoked": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "revoked"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ConsoleSession": []
+          }
+        ]
+      }
+    },
+    "/oauth/consent": {
+      "get": {
+        "summary": "Read and bind an unexpired authorization request to the signed-in customer",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Consent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "ConsoleSession": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Explicitly approve or deny the bound authorization request",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Redirect"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Account connection limit reached or authorization already consumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ConsoleSession": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsentDecision"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/oauth-protected-resource/mcp": {
+      "get": {
+        "summary": "Discover the MCP protected resource",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtectedResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/.well-known/oauth-protected-resource": {
+      "get": {
+        "summary": "Discover the MCP protected resource",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtectedResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/.well-known/oauth-authorization-server": {
+      "get": {
+        "summary": "Discover the public PKCE authorization server",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizationServer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/oauth/register": {
+      "post": {
+        "summary": "Register a public MCP client with exact redirect URIs",
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisteredClient"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registration"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/authorize": {
+      "get": {
+        "summary": "Start browser consent using PKCE S256 and the exact MCP resource",
+        "security": [],
+        "parameters": [
+          {
+            "name": "client_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "redirect_uri",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code_challenge",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resource",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "response_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "code_challenge_method",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "S256"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to the configured customer console for explicit sign-in and consent",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid client, redirect, resource, state, scopes or PKCE challenge",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/token": {
+      "post": {
+        "summary": "Exchange a one-time code or rotate a refresh token",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CodeExchange"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RefreshExchange"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/revoke": {
+      "post": {
+        "summary": "Revoke a token or the refresh-token connection",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, expired or revoked authority",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Request rate limit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Revoke"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp": {
+      "post": {
+        "summary": "Authenticated stateless Streamable HTTP MCP",
+        "description": "Official MCP SDK endpoint. Revalidates key/grant, scope, expiry and revocation on every request. Maximum input/output 1 MiB and request deadline 30 seconds; runtime configuration can lower these bounds. Use tools/list for authoritative tool schemas. New side effects require workload_authorized=true and a stable request_id. A client disconnect does not cancel accepted asynchronous work.",
+        "security": [
+          {
+            "CustomerBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MCPRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MCP JSON-RPC response or protocol error; safe tool failures use isError and structured error codes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted MCP notification"
+          },
+          "401": {
+            "description": "Missing/expired/revoked credential",
+            "headers": {
+              "WWW-Authenticate": {
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer resource_metadata points to protected-resource metadata."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or scope denied"
+          },
+          "413": {
+            "description": "Input bound exceeded"
+          },
+          "503": {
+            "description": "Admission/deadline/service unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "CustomerBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Existing customer API key, scoped connection token or OAuth access token."
+      },
+      "ConsoleSession": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Short-lived asymmetric Better Auth API JWT from the current verified customer account. The configured issuer, audience, signing keys and current account state are checked. Browser cookies, session tokens and legacy Supabase tokens cannot authorize these routes; accounts are never merged by email."
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "Connection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "verification:read",
+                "verification:write",
+                "credits:read"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3,
+            "uniqueItems": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_used_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "client_name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "scopes",
+          "created_at",
+          "expires_at",
+          "revoked_at"
+        ]
+      },
+      "ConnectionList": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "scopes_supported": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "verification:read",
+                "verification:write",
+                "credits:read"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3,
+            "uniqueItems": true
+          },
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Connection"
+            },
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "endpoint",
+          "scopes_supported",
+          "connections"
+        ]
+      },
+      "CreateConnection": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "verification:read",
+                "verification:write",
+                "credits:read"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3,
+            "uniqueItems": true
+          },
+          "expires_in": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 2592000,
+            "default": 604800
+          }
+        },
+        "required": [
+          "name",
+          "scopes"
+        ],
+        "additionalProperties": false
+      },
+      "IssuedConnection": {
+        "type": "object",
+        "properties": {
+          "connection": {
+            "$ref": "#/components/schemas/Connection"
+          },
+          "token": {
+            "type": "string",
+            "description": "One-time secret. Store securely; never log or put in a URL."
+          }
+        },
+        "required": [
+          "connection",
+          "token"
+        ]
+      },
+      "Consent": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string"
+          },
+          "client_name": {
+            "type": "string"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "verification:read",
+                "verification:write",
+                "credits:read"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3,
+            "uniqueItems": true
+          },
+          "redirect_uri": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "request_id",
+          "client_name",
+          "scopes",
+          "redirect_uri"
+        ]
+      },
+      "ConsentDecision": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string"
+          },
+          "approved": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "request_id",
+          "approved"
+        ],
+        "additionalProperties": false
+      },
+      "Redirect": {
+        "type": "object",
+        "properties": {
+          "redirect_url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "redirect_url"
+        ]
+      },
+      "Registration": {
+        "type": "object",
+        "properties": {
+          "client_name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "redirect_uris": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "grant_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "authorization_code",
+                "refresh_token"
+              ]
+            },
+            "default": [
+              "authorization_code"
+            ]
+          },
+          "response_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "code"
+              ]
+            }
+          },
+          "token_endpoint_auth_method": {
+            "type": "string",
+            "enum": [
+              "none"
+            ],
+            "default": "none"
+          }
+        },
+        "required": [
+          "redirect_uris"
+        ]
+      },
+      "RegisteredClient": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "client_id_issued_at": {
+            "type": "integer"
+          },
+          "client_name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "redirect_uris": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "grant_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "authorization_code",
+                "refresh_token"
+              ]
+            },
+            "default": [
+              "authorization_code"
+            ]
+          },
+          "response_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "code"
+              ]
+            }
+          },
+          "token_endpoint_auth_method": {
+            "type": "string",
+            "enum": [
+              "none"
+            ],
+            "default": "none"
+          }
+        },
+        "required": [
+          "client_id",
+          "client_name",
+          "redirect_uris",
+          "grant_types",
+          "response_types",
+          "token_endpoint_auth_method"
+        ]
+      },
+      "Token": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "token_type": {
+            "type": "string",
+            "enum": [
+              "Bearer"
+            ]
+          },
+          "expires_in": {
+            "type": "integer",
+            "maximum": 3600
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token",
+          "token_type",
+          "expires_in",
+          "scope"
+        ]
+      },
+      "CodeExchange": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "redirect_uri": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "code_verifier": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "grant_type": {
+            "type": "string",
+            "enum": [
+              "authorization_code"
+            ]
+          }
+        },
+        "required": [
+          "client_id",
+          "redirect_uri",
+          "code",
+          "code_verifier",
+          "resource",
+          "grant_type"
+        ],
+        "additionalProperties": false
+      },
+      "RefreshExchange": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "refresh_token": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "grant_type": {
+            "type": "string",
+            "enum": [
+              "refresh_token"
+            ]
+          }
+        },
+        "required": [
+          "client_id",
+          "refresh_token",
+          "resource",
+          "grant_type"
+        ],
+        "additionalProperties": false
+      },
+      "Revoke": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "token_type_hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "client_id",
+          "token"
+        ],
+        "additionalProperties": false
+      },
+      "ProtectedResource": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "type": "string",
+            "format": "uri"
+          },
+          "authorization_servers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "scopes_supported": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "verification:read",
+                "verification:write",
+                "credits:read"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3,
+            "uniqueItems": true
+          },
+          "bearer_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "header"
+              ]
+            }
+          }
+        },
+        "required": [
+          "resource",
+          "authorization_servers",
+          "scopes_supported",
+          "bearer_methods_supported"
+        ]
+      },
+      "AuthorizationServer": {
+        "type": "object",
+        "properties": {
+          "issuer": {
+            "type": "string",
+            "format": "uri"
+          },
+          "authorization_endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "token_endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "revocation_endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "registration_endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "response_types_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "grant_types_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "token_endpoint_auth_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "code_challenge_methods_supported": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "scopes_supported": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "verification:read",
+                "verification:write",
+                "credits:read"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 3,
+            "uniqueItems": true
+          },
+          "authorization_response_iss_parameter_supported": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "issuer",
+          "authorization_endpoint",
+          "token_endpoint",
+          "registration_endpoint",
+          "code_challenge_methods_supported"
+        ]
+      },
+      "MCPRequest": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          },
+          "id": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "method": {
+            "type": "string",
+            "description": "MCP SDK methods, including initialize/server/discover, tools/list and tools/call."
+          },
+          "params": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "jsonrpc",
+          "method"
+        ]
+      }
+    }
+  },
+  "externalDocs": {
+    "url": "https://modelcontextprotocol.io/specification/2026-07-28",
+    "description": "MCP protocol"
+  },
+  "x-mcp-tools": [
+    "verify_email",
+    "create_verification_task",
+    "list_verification_tasks",
+    "get_verification_task",
+    "get_verification_results",
+    "get_verification_export",
+    "get_credit_balance",
+    "get_credit_usage"
+  ]
+}
